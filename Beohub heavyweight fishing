@@ -16,13 +16,13 @@ getgenv().PP_Skill_Z = false
 getgenv().PP_Skill_X = false
 getgenv().PP_Skill_C = false
 getgenv().PP_Skill_V = false
-getgenv().SafeAutoCast = false
-getgenv().SafeAutoSell = false
-getgenv().SafeSellInterval = 5
+getgenv().Crow_AutoSell = false
+getgenv().Crow_SellInterval = 5
+getgenv().AntiAfkExecuted = true
 
 -- TẠO CỬA SỔ
 local Window = Rayfield:CreateWindow({
-    Name = "🐧 BeoHub v3.6",
+    Name = "🐧 BeoHub v3.8",
     LoadingTitle = "Đang tải BeoHub...",
     LoadingSubtitle = "by Beohub",
     ConfigurationSaving = { Enabled = false },
@@ -49,25 +49,13 @@ end
 local Tab1 = Window:CreateTab("🎣 Câu Cá", 4483362458)
 
 Tab1:CreateToggle({
-    Name = "🎣 Auto Thả Câu An Toàn (Random 5-7s)",
+    Name = "💰 Auto Bán Cá Crow",
     CurrentValue = false,
-    Flag = "SafeAutoCast",
+    Flag = "Crow_AutoSell",
     Callback = function(value)
-        getgenv().SafeAutoCast = value
+        getgenv().Crow_AutoSell = value
         if value then
-            Rayfield:Notify({Title = "🐟 Auto Fish", Content = "Đã bật auto thả câu an toàn!", Duration = 2})
-        end
-    end
-})
-
-Tab1:CreateToggle({
-    Name = "💰 Auto Bán Cá An Toàn (Random 5-30s)",
-    CurrentValue = false,
-    Flag = "SafeAutoSell",
-    Callback = function(value)
-        getgenv().SafeAutoSell = value
-        if value then
-            Rayfield:Notify({Title = "💰 Auto Sell", Content = "Đã bật auto bán cá an toàn!", Duration = 2})
+            Rayfield:Notify({Title = "💰 Auto Sell", Content = "Đã bật auto bán cá!", Duration = 2})
         end
     end
 })
@@ -78,9 +66,9 @@ Tab1:CreateSlider({
     Increment = 1,
     Suffix = "s",
     CurrentValue = 5,
-    Flag = "SellInterval",
+    Flag = "Crow_SellInterval",
     Callback = function(value)
-        getgenv().SafeSellInterval = value
+        getgenv().Crow_SellInterval = value
     end
 })
 
@@ -110,14 +98,9 @@ Tab1:CreateButton({
     Callback = function()
         Rayfield:Notify({Title = "🎣 Đang tải...", Content = "PPINGYYY Gốc đang được kích hoạt.", Duration = 2})
         pcall(function()
-            loadstring(game:HttpGet("https://rawscripts.net/raw/Heavyweight-Fishing-PPINGYYY-HUB-V4-246187"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/hayaccphuhhhs-droid/N-t-c-u-o-PPINGYYY-/refs/heads/main/N%C3%BAt%20c%C3%A2u%20%E1%BA%A3o%20PPINGYYY"))()
         end)
     end
-})
-
-Tab1:CreateParagraph({
-    Title = "⚠️ Lưu Ý An Toàn",
-    Content = "Auto Fish dùng random delay để tránh bị phát hiện. KHÔNG bật auto minigame hay teleport khi đang farm. Nên chạy ở private server."
 })
 
 -- ============================================
@@ -274,7 +257,6 @@ Tab7:CreateButton({
 -- ============================================
 local Tab8 = Window:CreateTab("🎁 Auto Code", 4483362458)
 
--- Hàm nhập code
 local function RedeemCode(code)
     pcall(function()
         if RS:FindFirstChild("Events") then
@@ -296,7 +278,6 @@ local function RedeemCode(code)
     end)
 end
 
--- Input nhập code thủ công
 local customCode = ""
 
 Tab8:CreateInput({
@@ -322,7 +303,6 @@ Tab8:CreateButton({
     end,
 })
 
--- Input nhập nhiều code
 local multiCodes = ""
 
 Tab8:CreateInput({
@@ -360,11 +340,6 @@ Tab8:CreateButton({
             Rayfield:Notify({Title = "✅ Xong!", Content = "Đã nhập " .. #codes .. " code!", Duration = 5})
         end)
     end,
-})
-
-Tab8:CreateParagraph({
-    Title = "📌 Hướng Dẫn",
-    Content = "1. Nhập code thủ công vào ô input trên\n2. Hoặc nhập nhiều code (mỗi dòng 1 code) vào ô dưới\n3. Bấm nút tương ứng để nhập"
 })
 
 -- ============================================
@@ -434,21 +409,11 @@ addTeleport(Tab6, "Điểm 2", -1320, 8, -1568)
 addTeleport(Tab6, "Điểm 3", 1513, 75, 1538)
 
 -- ============================================
--- 🚀 VÒNG LẶP AUTO FISH AN TOÀN
+-- 🚀 VÒNG LẶP AUTO SELL (KHÔNG CÓ AUTO CAST)
 -- ============================================
 task.spawn(function()
     while task.wait(0.3) do
-        if getgenv().SafeAutoCast then
-            pcall(function()
-                if RS:FindFirstChild("Events") and RS.Events:FindFirstChild("Fishing") then
-                    RS.Events.Fishing:FireServer()
-                elseif RS:FindFirstChild("Fishing") then
-                    RS.Fishing:FireServer()
-                end
-            end)
-            task.wait(math.random(5, 7))
-        end
-        if getgenv().SafeAutoSell then
+        if getgenv().Crow_AutoSell then
             pcall(function()
                 if RS:FindFirstChild("Events") and RS.Events:FindFirstChild("SellFish") then
                     RS.Events.SellFish:FireServer("All")
@@ -456,7 +421,7 @@ task.spawn(function()
                     RS.SellFish:FireServer("All")
                 end
             end)
-            task.wait(getgenv().SafeSellInterval or 5)
+            task.wait(getgenv().Crow_SellInterval or 5)
         end
     end
 end)
@@ -544,5 +509,5 @@ RunService.Stepped:Connect(function()
     end)
 end)
 
-Rayfield:Notify({Title = "🐧 BeoHub v3.6", Content = "Đã tải thành công!", Duration = 3})
-print("🐧 BeoHub v3.6 (Rayfield) đã tải thành công!")
+Rayfield:Notify({Title = "🐧 BeoHub v3.8", Content = "Đã tải thành công!", Duration = 3})
+print("🐧 BeoHub v3.8 (Rayfield) đã tải thà
