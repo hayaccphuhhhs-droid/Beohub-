@@ -93,7 +93,6 @@ Tab1:CreateButton({
     end
 })
 
--- 🎣 NÚT CÂU ẢO PPINGYYY (THAY THẾ PPINGYYY GỐC)
 Tab1:CreateButton({
     Name = "🎣 Bật Nút Câu Ảo PPINGYYY",
     Callback = function()
@@ -460,26 +459,30 @@ RunService.RenderStepped:Connect(function()
 end)
 
 -- ============================================
--- ⚡ AUTO SKILLS
+-- ⚡ AUTO SKILLS (ĐÃ SỬA LỖI X, C, V)
 -- ============================================
 task.spawn(function()
     while task.wait(0.5) do
         pcall(function()
+            -- Z
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_Z then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Z, false, game)
                 task.wait(0.05)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Z, false, game)
             end
+            -- X
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_X then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.X, false, game)
                 task.wait(0.05)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.X, false, game)
             end
+            -- C
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_C then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.C, false, game)
                 task.wait(0.05)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.C, false, game)
             end
+            -- V
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_V then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.V, false, game)
                 task.wait(0.05)
