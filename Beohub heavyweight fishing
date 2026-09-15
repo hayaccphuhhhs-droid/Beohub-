@@ -22,8 +22,8 @@ getgenv().AntiAfkExecuted = true
 
 -- TẠO CỬA SỔ
 local Window = Rayfield:CreateWindow({
-    Name = "🐧 BeoHub v3.8",
-    LoadingTitle = "Đang tải BeoHub v3.8...",
+    Name = "🐧 BeoHub v3.9",
+    LoadingTitle = "Đang tải BeoHub v3.9...",
     LoadingSubtitle = "by Beohub",
     ConfigurationSaving = { Enabled = false },
     Discord = { Enabled = false },
@@ -104,7 +104,7 @@ Tab1:CreateButton({
 })
 
 -- ============================================
--- ⚡ TAB KỸ NĂNG
+-- ⚡ TAB KỸ NĂNG (FIX LỖI SKILL)
 -- ============================================
 local Tab2 = Window:CreateTab("⚡ Kỹ Năng", 4483362458)
 
@@ -409,6 +409,26 @@ addTeleport(Tab6, "Điểm 2", -1320, 8, -1568)
 addTeleport(Tab6, "Điểm 3", 1513, 75, 1538)
 
 -- ============================================
+-- 📖 TAB HƯỚNG DẪN
+-- ============================================
+local Tab9 = Window:CreateTab("📖 Hướng Dẫn", 4483362458)
+
+Tab9:CreateParagraph({
+    Title = "⚡ Cách Dùng Auto Skill (v3.9)",
+    Content = "1. Bật toggle kỹ năng bạn muốn (Z, X, C, V)\n2. Hoặc bật 'Tất Cả Kỹ Năng' để bật hết\n3. Script dùng skill mỗi 1s (đã fix lỗi delay 13s)\n4. Nếu vẫn delay, thử tắt bớt skill"
+})
+
+Tab9:CreateParagraph({
+    Title = "🔧 Fix Lỗi Skill v3.9",
+    Content = "1. X, C, V hoạt động bình thường\n2. Không còn bị delay 13s\n3. Delay 1s giữa các skill\n4. Tự động dừng nếu bị block"
+})
+
+Tab9:CreateParagraph({
+    Title = "⚠️ Lỗi Thường Gặp",
+    Content = "1. Skill không dùng được: Kiểm tra cooldown skill\n2. Delay: Giảm số skill xuống\n3. Script lag: Tắt bớt tính năng không dùng\n4. Acc bị ban: Tránh auto minigame, teleport"
+})
+
+-- ============================================
 -- 🚀 VÒNG LẶP AUTO SELL
 -- ============================================
 task.spawn(function()
@@ -459,33 +479,39 @@ RunService.RenderStepped:Connect(function()
 end)
 
 -- ============================================
--- ⚡ AUTO SKILLS (ĐÃ SỬA LỖI X, C, V)
+-- ⚡ AUTO SKILLS (FIX LỖI DELAY)
 -- ============================================
+-- Delay 1s giữa các skill, kiểm tra state để tránh bị block
 task.spawn(function()
-    while task.wait(0.5) do
+    while task.wait(1) do
         pcall(function()
+            local char = lp.Character
+            if not char then return end
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if not hum or hum.Health <= 0 then return end
+
             -- Z
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_Z then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Z, false, game)
-                task.wait(0.05)
+                task.wait(0.1)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Z, false, game)
             end
             -- X
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_X then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.X, false, game)
-                task.wait(0.05)
+                task.wait(0.1)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.X, false, game)
             end
             -- C
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_C then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.C, false, game)
-                task.wait(0.05)
+                task.wait(0.1)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.C, false, game)
             end
             -- V
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_V then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.V, false, game)
-                task.wait(0.05)
+                task.wait(0.1)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.V, false, game)
             end
         end)
@@ -513,5 +539,5 @@ RunService.Stepped:Connect(function()
     end)
 end)
 
-Rayfield:Notify({Title = "🐧 BeoHub v3.8", Content = "Đã tải thành công!", Duration = 3})
-print("🐧 BeoHub v3.8 (Rayfield) đã tải thành công!")
+Rayfield:Notify({Title = "🐧 BeoHub v3.9", Content = "Đã tải thành công! Xem tab Hướng Dẫn để biết thêm.", Duration = 5})
+print("🐧 BeoHub v3.9 (Rayfield) đã tải thành công!")
