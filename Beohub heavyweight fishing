@@ -19,6 +19,7 @@ getgenv().PP_Skill_V = false
 getgenv().Crow_AutoSell = false
 getgenv().Crow_SellInterval = 5
 getgenv().AntiAfkExecuted = true
+getgenv().JerkTrollActive = false
 
 -- TẠO CỬA SỔ
 local Window = Rayfield:CreateWindow({
@@ -104,7 +105,7 @@ Tab1:CreateButton({
 })
 
 -- ============================================
--- ⚡ TAB KỸ NĂNG (FIX LỖI SKILL)
+-- ⚡ TAB KỸ NĂNG
 -- ============================================
 local Tab2 = Window:CreateTab("⚡ Kỹ Năng", 4483362458)
 
@@ -144,7 +145,7 @@ Tab2:CreateToggle({
 })
 
 -- ============================================
--- 🛠️ TAB CÔNG CỤ
+-- 🛠️ TAB CÔNG CỤ (ĐÃ THAY FLY BẰNG JERK TROLL)
 -- ============================================
 local Tab3 = Window:CreateTab("🛠️ Công Cụ", 4483362458)
 
@@ -182,13 +183,55 @@ Tab3:CreateSlider({
     end
 })
 
+-- 🕺 JERK TROLL ANIMATION (THAY THẾ FLY)
 Tab3:CreateButton({
-    Name = "🚀 Mở Menu Bay",
+    Name = "🕺 Jerk Troll Animation (Bật/Tắt)",
     Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FLY-GUI-V11-205450"))()
-        end)
-        Rayfield:Notify({Title = "🚀 Đã tải Fly!", Content = "Menu bay đã sẵn sàng.", Duration = 3})
+        local char = lp.Character
+        if not char then
+            Rayfield:Notify({Title = "⚠️ Lỗi", Content = "Không tìm thấy nhân vật!", Duration = 3})
+            return
+        end
+        
+        local hum = char:FindFirstChildOfClass("Humanoid")
+        if not hum then
+            Rayfield:Notify({Title = "⚠️ Lỗi", Content = "Không tìm thấy Humanoid!", Duration = 3})
+            return
+        end
+        
+        if getgenv().JerkTrollActive then
+            -- Tắt animation
+            getgenv().JerkTrollActive = false
+            local animate = char:FindFirstChild("Animate")
+            if animate then
+                animate.Disabled = false
+            end
+            Rayfield:Notify({Title = "🕺 Jerk Troll", Content = "Đã tắt animation!", Duration = 2})
+        else
+            -- Bật animation
+            getgenv().JerkTrollActive = true
+            
+            local animationId = "rbxassetid://148840371"
+            local anim = Instance.new("Animation")
+            anim.AnimationId = animationId
+            
+            local animator = hum:FindFirstChildOfClass("Animator")
+            if not animator then
+                animator = Instance.new("Animator", hum)
+            end
+            
+            local track = animator:LoadAnimation(anim)
+            track.Priority = Enum.AnimationPriority.Action
+            track.Looped = true
+            track:Play()
+            
+            local animate = char:FindFirstChild("Animate")
+            if animate then
+                animate.Disabled = true
+            end
+            
+            Rayfield:Notify({Title = "🕺 Jerk Troll", Content = "Đã bật animation!", Duration = 2})
+        end
     end
 })
 
@@ -419,13 +462,13 @@ Tab9:CreateParagraph({
 })
 
 Tab9:CreateParagraph({
-    Title = "🔧 Fix Lỗi Skill v3.9",
-    Content = "1. X, C, V hoạt động bình thường\n2. Không còn bị delay 13s\n3. Delay 1s giữa các skill\n4. Tự động dừng nếu bị block"
+    Title = "🕺 Jerk Troll Animation (MỚI)",
+    Content = "1. Bấm nút 'Jerk Troll Animation'\n2. Nhân vật sẽ nhảy animation troll\n3. Bấm lần nữa để tắt\n4. An toàn hơn Fly rất nhiều (không ảnh hưởng vị trí)"
 })
 
 Tab9:CreateParagraph({
-    Title = "⚠️ Lỗi Thường Gặp",
-    Content = "1. Skill không dùng được: Kiểm tra cooldown skill\n2. Delay: Giảm số skill xuống\n3. Script lag: Tắt bớt tính năng không dùng\n4. Acc bị ban: Tránh auto minigame, teleport"
+    Title = "⚠️ Tại Sao Bỏ Fly?",
+    Content = "Fly rất dễ bị ban vì:\n- Can thiệp vào vị trí nhân vật\n- Server phát hiện dễ dàng\n- Vi phạm điều khoản game\n\nJerk Troll chỉ là animation, không ảnh hưởng vị trí!"
 })
 
 -- ============================================
@@ -481,7 +524,6 @@ end)
 -- ============================================
 -- ⚡ AUTO SKILLS (FIX LỖI DELAY)
 -- ============================================
--- Delay 1s giữa các skill, kiểm tra state để tránh bị block
 task.spawn(function()
     while task.wait(1) do
         pcall(function()
@@ -490,25 +532,21 @@ task.spawn(function()
             local hum = char:FindFirstChildOfClass("Humanoid")
             if not hum or hum.Health <= 0 then return end
 
-            -- Z
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_Z then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Z, false, game)
                 task.wait(0.1)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Z, false, game)
             end
-            -- X
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_X then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.X, false, game)
                 task.wait(0.1)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.X, false, game)
             end
-            -- C
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_C then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.C, false, game)
                 task.wait(0.1)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.C, false, game)
             end
-            -- V
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_V then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.V, false, game)
                 task.wait(0.1)
@@ -539,5 +577,4 @@ RunService.Stepped:Connect(function()
     end)
 end)
 
-Rayfield:Notify({Title = "🐧 BeoHub v3.9", Content = "Đã tải thành công! Xem tab Hướng Dẫn để biết thêm.", Duration = 5})
-print("🐧 BeoHub v3.9 (Rayfield) đã tải thành công!")
+Rayfield:Notify({Title = "🐧 BeoHub v3.9", Content 
