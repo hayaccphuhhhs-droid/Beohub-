@@ -21,8 +21,8 @@ getgenv().CoordTracker = false
 
 -- WINDOW
 local Window = Rayfield:CreateWindow({
-    Name = "🐧 BeoHub v3.9",
-    LoadingTitle = "Đang tải...",
+    Name = "🐧 BeoHub v4.1",
+    LoadingTitle = "Đang tải BeoHub v4.1...",
     LoadingSubtitle = "by Beohub",
     ConfigurationSaving = { Enabled = false },
     Discord = { Enabled = false },
@@ -134,6 +134,11 @@ Tab2:CreateToggle({
     Callback = function(v) getgenv().SkillV = v end
 })
 
+Tab2:CreateParagraph({
+    Title = "⚡ Cách Dùng",
+    Content = "Bật toggle kỹ năng muốn dùng. Script sẽ tự động dùng skill mỗi 1s. Không bị delay 13s."
+})
+
 -- ============================================
 -- 🛠️ TAB CÔNG CỤ
 -- ============================================
@@ -171,7 +176,6 @@ Tab3:CreateSlider({
     end
 })
 
--- 📐 ĐO TỌA ĐỘ
 Tab3:CreateButton({
     Name = "📐 Đo Tọa Độ (Copy)",
     Callback = function()
@@ -179,43 +183,10 @@ Tab3:CreateButton({
         if not char then return end
         local hrp = char:FindFirstChild("HumanoidRootPart")
         if not hrp then return end
-        
-        local x = math.floor(hrp.Position.X)
-        local y = math.floor(hrp.Position.Y)
-        local z = math.floor(hrp.Position.Z)
-        
-        local coords = x .. ", " .. y .. ", " .. z
+        local coords = math.floor(hrp.Position.X) .. ", " .. math.floor(hrp.Position.Y) .. ", " .. math.floor(hrp.Position.Z)
         setclipboard(coords)
-        
-        Rayfield:Notify({
-            Title = "📐 Tọa Độ Đã Copy!",
-            Content = coords,
-            Duration = 5
-        })
-        print("📍 Tọa độ: " .. coords)
-    end
-})
-
-Tab3:CreateButton({
-    Name = "📐 Bật/Tắt Đo Tọa Độ Realtime",
-    Callback = function()
-        if getgenv().CoordTracker then
-            getgenv().CoordTracker = false
-            Rayfield:Notify({Title = "📐 Tracker", Content = "Đã tắt!", Duration = 2})
-        else
-            getgenv().CoordTracker = true
-            Rayfield:Notify({Title = "📐 Tracker", Content = "Đã bật! Xem Console (F9)", Duration = 3})
-            task.spawn(function()
-                while getgenv().CoordTracker do
-                    task.wait(0.5)
-                    local char = lp.Character
-                    if char and char:FindFirstChild("HumanoidRootPart") then
-                        local p = char.HumanoidRootPart.Position
-                        print(string.format("📍 Tọa độ: %d, %d, %d", p.X, p.Y, p.Z))
-                    end
-                end
-            end)
-        end
+        Rayfield:Notify({Title = "📐 Đã Copy!", Content = coords, Duration = 5})
+        print("📍 " .. coords)
     end
 })
 
@@ -238,7 +209,7 @@ Tab4:CreateInput({
 Tab4:CreateButton({
     Name = "🚀 Join Server",
     Callback = function()
-        if jobId == "" or not jobId then
+        if jobId == "" then
             Rayfield:Notify({Title = "⚠️ Lỗi", Content = "Nhập Job ID!", Duration = 2})
             return
         end
@@ -400,36 +371,47 @@ local Tab8 = Window:CreateTab("👻 Linh Hồn", 4483362458)
 
 TP(Tab8, "Điểm 1", -1592, 21, -137)
 TP(Tab8, "Điểm 2", -1320, 8, -1568)
-TP(Tab8, "Điểm 3", 1513, 75, 1538)
+TP(Tab8, "Điểm 3", 1536, 72, 1513)
 
 -- ============================================
--- 📖 TAB HƯỚNG DẪN
+-- 📢 TAB THÔNG TIN UPDATE (MỚI)
 -- ============================================
-local Tab9 = Window:CreateTab("📖 Hướng Dẫn", 4483362458)
+local Tab9 = Window:CreateTab("📢 Update", 4483362458)
 
 Tab9:CreateParagraph({
-    Title = "📐 Cách Đo Tọa Độ",
-    Content = "1. Đứng ở vị trí muốn đo\n2. Bấm 'Đo Tọa Độ (Copy)'\n3. Tọa độ tự động copy vào clipboard\n4. Dán vào code teleport để thêm điểm mới"
+    Title = "🐧 BeoHub v4.1",
+    Content = "Phiên bản mới nhất - Fix Auto Skill, thêm tab thông tin!"
 })
 
 Tab9:CreateParagraph({
-    Title = "📐 Đo Realtime",
-    Content = "1. Bấm 'Bật Đo Tọa Độ Realtime'\n2. Mở Console (F9) để xem tọa độ liên tục\n3. Bấm lần nữa để tắt"
+    Title = "📅 Ngày cập nhật",
+    Content = "15/09/2026"
 })
 
 Tab9:CreateParagraph({
-    Title = "⚡ Auto Skill",
-    Content = "Bật toggle kỹ năng muốn dùng. Delay 1s giữa các skill."
+    Title = "🆕 Có gì mới trong v4.1?",
+    Content = "1. Fix lỗi Auto Skill (delay 13s)\n2. Thêm tab Thông Tin Update\n3. Tối ưu hóa script nhẹ hơn\n4. Cập nhật phiên bản lên v4.1"
 })
 
 Tab9:CreateParagraph({
-    Title = "⚠️ Lưu Ý",
-    Content = "Tránh dùng auto minigame, teleport để không bị ban."
+    Title = "🐛 Đã fix",
+    Content = "- Auto Skill Z, X, C, V giờ mượt hơn\n- Không còn bị delay 13s\n- Script execute ổn định hơn"
+})
+
+Tab9:CreateParagraph({
+    Title = "📌 Lưu ý sử dụng",
+    Content = "1.Không teleport liên tục\n3. Chạy sever ít người server khi farm"
+})
+
+Tab9:CreateParagraph({
+    Title = "Tin nhắn",
+    Content = "Ai dùng script này sẽ rất béo!"
 })
 
 -- ============================================
 -- 🚀 VÒNG LẶP
 -- ============================================
+-- Auto Sell
 task.spawn(function()
     while task.wait(0.3) do
         if getgenv().AutoSell then
@@ -445,6 +427,7 @@ task.spawn(function()
     end
 end)
 
+-- Auto Anchor
 RunService.RenderStepped:Connect(function()
     if getgenv().Anchor then
         pcall(function()
@@ -469,6 +452,7 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
+-- Auto Skill (delay 1s)
 task.spawn(function()
     while task.wait(1) do
         pcall(function()
@@ -479,28 +463,33 @@ task.spawn(function()
 
             if getgenv().AutoSkillAll or getgenv().SkillZ then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Z, false, game)
-                task.wait(0.1)
+                task.wait(0.15)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Z, false, game)
+                task.wait(0.1)
             end
             if getgenv().AutoSkillAll or getgenv().SkillX then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.X, false, game)
-                task.wait(0.1)
+                task.wait(0.15)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.X, false, game)
+                task.wait(0.1)
             end
             if getgenv().AutoSkillAll or getgenv().SkillC then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.C, false, game)
-                task.wait(0.1)
+                task.wait(0.15)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.C, false, game)
+                task.wait(0.1)
             end
             if getgenv().AutoSkillAll or getgenv().SkillV then
                 VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.V, false, game)
-                task.wait(0.1)
+                task.wait(0.15)
                 VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.V, false, game)
+                task.wait(0.1)
             end
         end)
     end
 end)
 
+-- Speed + Noclip
 RunService.Stepped:Connect(function()
     pcall(function()
         local char = lp.Character
@@ -519,5 +508,5 @@ RunService.Stepped:Connect(function()
     end)
 end)
 
-Rayfield:Notify({Title = "🐧 BeoHub v3.9", Content = "Đã tải thành công! Đo tọa độ đã sẵn sàng!", Duration = 3})
-print("🐧 BeoHub v3.9 đã tải thành công!")
+Rayfield:Notify({Title = "🐧 BeoHub v4.1", Content = "Đã tải thành công! Xem tab Update để biết thêm.", Duration = 5})
+print("🐧 BeoHub v4.1 đã tải thành công!")
