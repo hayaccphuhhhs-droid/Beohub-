@@ -4,9 +4,9 @@ local RunService = game:GetService("RunService")
 local VIM = game:GetService("VirtualInputManager")
 local CoreGui = game:GetService("CoreGui")
 local TeleportService = game:GetService("TeleportService")
+local TweenService = game:GetService("TweenService")
 local lp = Players.LocalPlayer
 
--- ====================== CẤU HÌNH ======================
 getgenv().SafeAutoSell = false
 getgenv().SafeSellInterval = 5
 getgenv().NWKZ_Anchor = false
@@ -18,24 +18,20 @@ getgenv().PP_Skill_X = false
 getgenv().PP_Skill_C = false
 getgenv().PP_Skill_V = false
 
--- ====================== XÓA UI CŨ ======================
 if CoreGui:FindFirstChild("BeoHubUI") then CoreGui.BeoHubUI:Destroy() end
 if lp.PlayerGui:FindFirstChild("BeoHubUI") then lp.PlayerGui.BeoHubUI:Destroy() end
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "BeoHubUI"
 ScreenGui.ResetOnSpawn = false
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 pcall(function() ScreenGui.Parent = CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = lp.PlayerGui end
 
--- ====================== NÚT VUÔNG MỞ/ĐÓNG ======================
 local OpenBtn = Instance.new("TextButton")
-OpenBtn.Name = "OpenBtn"
 OpenBtn.Size = UDim2.new(0, 55, 0, 55)
 OpenBtn.Position = UDim2.new(0, 20, 0.4, 0)
 OpenBtn.BackgroundColor3 = Color3.fromRGB(0, 140, 255)
-OpenBtn.Text = "🐧"
+OpenBtn.Text = "👑"
 OpenBtn.TextSize = 24
 OpenBtn.Font = Enum.Font.GothamBold
 OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -43,15 +39,21 @@ OpenBtn.Parent = ScreenGui
 OpenBtn.Active = true
 OpenBtn.Draggable = true
 Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(0, 10)
+Instance.new("UIStroke", OpenBtn).Color = Color3.fromRGB(0, 200, 255)
 
-local OpenStroke = Instance.new("UIStroke", OpenBtn)
-OpenStroke.Color = Color3.fromRGB(0, 200, 255)
-OpenStroke.Thickness = 2
+local TrollIcons = {"👑","🥶","🗿","💀","🔥","😈","🐧"}
+local iconIdx = 1
+task.spawn(function()
+    while OpenBtn and OpenBtn.Parent do
+        OpenBtn.Text = TrollIcons[iconIdx]
+        iconIdx = iconIdx + 1
+        if iconIdx > #TrollIcons then iconIdx = 1 end
+        task.wait(0.8)
+    end
+end)
 
--- ====================== MAIN FRAME (NHỎ LẠI) ======================
 local Main = Instance.new("Frame")
-Main.Name = "Main"
-Main.Size = UDim2.new(0, 520, 0, 400)  -- NHỎ HƠN
+Main.Size = UDim2.new(0, 520, 0, 400)
 Main.Position = UDim2.new(0.5, -260, 0.5, -200)
 Main.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
 Main.BorderSizePixel = 0
@@ -60,24 +62,30 @@ Main.Active = true
 Main.Draggable = true
 Main.Parent = ScreenGui
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 14)
+Instance.new("UIStroke", Main).Color = Color3.fromRGB(40, 40, 55)
 
-local Stroke = Instance.new("UIStroke", Main)
-Stroke.Color = Color3.fromRGB(40, 40, 55)
-Stroke.Thickness = 1.5
-
--- Title
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -50, 0, 40)
 Title.Position = UDim2.new(0, 18, 0, 6)
 Title.BackgroundTransparency = 1
-Title.Text = "🐧 BeoHub v4.4"
+Title.Text = "👑🐧 BeoHub v4.5"
 Title.TextColor3 = Color3.fromRGB(0, 200, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 20
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Main
 
--- Close
+local Titles = {"👑🐧 BeoHub v4.5","🥶🐧 AURA MAX","🗿🐧 NO MERCY","💀🐧 BÁ KHÍ","🔥👑 LEGEND MODE"}
+local titleIdx = 1
+task.spawn(function()
+    while Title and Title.Parent do
+        Title.Text = Titles[titleIdx]
+        titleIdx = titleIdx + 1
+        if titleIdx > #Titles then titleIdx = 1 end
+        task.wait(2)
+    end
+end)
+
 local Close = Instance.new("TextButton")
 Close.Size = UDim2.new(0, 32, 0, 32)
 Close.Position = UDim2.new(1, -42, 0, 8)
@@ -88,15 +96,9 @@ Close.Font = Enum.Font.GothamBold
 Close.TextSize = 20
 Close.Parent = Main
 
--- Mở / Đóng
-OpenBtn.MouseButton1Click:Connect(function()
-    Main.Visible = not Main.Visible
-end)
-Close.MouseButton1Click:Connect(function()
-    Main.Visible = false
-end)
+OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
+Close.MouseButton1Click:Connect(function() Main.Visible = false end)
 
--- ====================== TAB ======================
 local TabBar = Instance.new("Frame")
 TabBar.Size = UDim2.new(1, -30, 0, 42)
 TabBar.Position = UDim2.new(0, 15, 0, 52)
@@ -111,23 +113,19 @@ TabScroll.ScrollBarThickness = 0
 TabScroll.ScrollingDirection = Enum.ScrollingDirection.X
 TabScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 TabScroll.AutomaticCanvasSize = Enum.AutomaticSize.X
-TabScroll.ScrollBarImageTransparency = 1
 TabScroll.Parent = TabBar
 
 local TabLayout = Instance.new("UIListLayout", TabScroll)
 TabLayout.FillDirection = Enum.FillDirection.Horizontal
 TabLayout.Padding = UDim.new(0, 5)
-TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
-local Tabs = {"Câu Cá", "Kỹ Năng", "Công Cụ", "Dịch Chuyển", "Thương Nhân", "Linh Hồn", "Code", "Join Server", "Update"}
+local Tabs = {"Câu Cá","Kỹ Năng","Công Cụ","Dịch Chuyển","Thương Nhân","Linh Hồn","Code","Join Server","Update"}
 local TabButtons = {}
 local Pages = {}
 
-local tabWidth = 70  -- NHỎ HƠN
-
 for i, name in ipairs(Tabs) do
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, tabWidth, 1, 0)
+    btn.Size = UDim2.new(0, 70, 1, 0)
     btn.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
     btn.Text = name
     btn.TextColor3 = Color3.fromRGB(180, 180, 200)
@@ -163,7 +161,6 @@ for name, btn in pairs(TabButtons) do
     btn.MouseButton1Click:Connect(function() SwitchTab(name) end)
 end
 
--- ====================== HÀM TẠO UI ======================
 local function CreateToggle(parent, text, default, callback)
     local row = Instance.new("Frame")
     row.Size = UDim2.new(1, 0, 0, 38)
@@ -245,7 +242,7 @@ local function CreateParagraph(parent, title, content)
     lbl.Size = UDim2.new(1, 0, 0, 0)
     lbl.AutomaticSize = Enum.AutomaticSize.Y
     lbl.BackgroundTransparency = 1
-    lbl.Text = "📌 " .. title .. "\n" .. content
+    lbl.Text = "👑 " .. title .. "\n" .. content
     lbl.TextColor3 = Color3.fromRGB(200, 200, 220)
     lbl.Font = Enum.Font.Gotham
     lbl.TextSize = 12
@@ -254,10 +251,6 @@ local function CreateParagraph(parent, title, content)
     lbl.TextYAlignment = Enum.TextYAlignment.Top
     lbl.Parent = frame
 end
-
--- ====================== NỘI DUNG TAB ======================
-
--- 🎣 CÂU CÁ
 CreateToggle(Pages["Câu Cá"], "💰 Auto Bán Cá", false, function(v) getgenv().SafeAutoSell = v end)
 CreateToggle(Pages["Câu Cá"], "Giữ Thanh Bar", false, function(v) getgenv().NWKZ_Anchor = v end)
 CreateButton(Pages["Câu Cá"], "💰 Bán Tất Cả Cá", function()
@@ -273,17 +266,15 @@ CreateButton(Pages["Câu Cá"], "🎣 Bật Nút Câu Ảo PPINGYYY", function()
     end)
 end)
 
--- ⚡ KỸ NĂNG
-CreateToggle(Pages["Kỹ Năng"], "Tất Cả Kỹ Năng", false, function(v) getgenv().PP_AutoSkillAll = v end)
-CreateToggle(Pages["Kỹ Năng"], "Kỹ Năng Z", false, function(v) getgenv().PP_Skill_Z = v end)
-CreateToggle(Pages["Kỹ Năng"], "Kỹ Năng X", false, function(v) getgenv().PP_Skill_X = v end)
-CreateToggle(Pages["Kỹ Năng"], "Kỹ Năng C", false, function(v) getgenv().PP_Skill_C = v end)
-CreateToggle(Pages["Kỹ Năng"], "Kỹ Năng V", false, function(v) getgenv().PP_Skill_V = v end)
+CreateToggle(Pages["Kỹ Năng"], "⚡ Tất Cả Kỹ Năng", false, function(v) getgenv().PP_AutoSkillAll = v end)
+CreateToggle(Pages["Kỹ Năng"], "🔥 Kỹ Năng Z", false, function(v) getgenv().PP_Skill_Z = v end)
+CreateToggle(Pages["Kỹ Năng"], "💀 Kỹ Năng X", false, function(v) getgenv().PP_Skill_X = v end)
+CreateToggle(Pages["Kỹ Năng"], "🥶 Kỹ Năng C", false, function(v) getgenv().PP_Skill_C = v end)
+CreateToggle(Pages["Kỹ Năng"], "👑 Kỹ Năng V", false, function(v) getgenv().PP_Skill_V = v end)
 CreateParagraph(Pages["Kỹ Năng"], "Cách Dùng", "Bật toggle kỹ năng muốn dùng. Script tự dùng skill mỗi 1s.")
 
--- 🛠️ CÔNG CỤ
-CreateToggle(Pages["Công Cụ"], "Xuyên Tường", false, function(v) getgenv().PP_Noclip = v end)
-CreateButton(Pages["Công Cụ"], "🔧 Fix Lag", function()
+CreateToggle(Pages["Công Cụ"], "⚡ Xuyên Tường", false, function(v) getgenv().PP_Noclip = v end)
+CreateButton(Pages["Công Cụ"], "🔥 Fix Lag", function()
     pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/hayaccphuhhhs-droid/Beohub/refs/heads/main/Fix%20lag"))()
     end)
@@ -298,29 +289,27 @@ CreateButton(Pages["Công Cụ"], "📐 Đo Tọa Độ (Copy)", function()
     print("📍 " .. coords)
 end)
 
--- 🏝️ DỊCH CHUYỂN
 local function addTP(tab, name, x, y, z)
-    CreateButton(Pages[tab], "📍 " .. name, function()
+    CreateButton(Pages[tab], "👑 " .. name, function()
         if lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
             lp.Character.HumanoidRootPart.CFrame = CFrame.new(x, y, z)
         end
     end)
 end
 
-addTP("Dịch Chuyển", "Đảo Khởi Đầu", -236, 6, 56)
-addTP("Dịch Chuyển", "Đảo Tre", -1226, 5, -23)
-addTP("Dịch Chuyển", "Đảo Tro Bụi", 74, 6, 1216)
-addTP("Dịch Chuyển", "Đảo Chủ Quyền", -1285, 6, 1240)
-addTP("Dịch Chuyển", "Đảo Perch", -47, 9, -1337)
-addTP("Dịch Chuyển", "Đảo Băng", -1348, 9, -1485)
-addTP("Dịch Chuyển", "Đảo Dừa", 1434, 9, -1433)
-addTP("Dịch Chuyển", "Đảo Amber", 1243, 6, 1393)
-addTP("Dịch Chuyển", "Đảo Đấu Trường", 1543, 46, -51)
-addTP("Dịch Chuyển", "Đảo Núi Ai Lao", 2635, 6, -17)
-addTP("Dịch Chuyển", "Đảo Thiên Đường", -2417, 7, -204)
+addTP("Dịch Chuyển", "🔥 Đảo Khởi Đầu", -236, 6, 56)
+addTP("Dịch Chuyển", "💀 Đảo Tre", -1226, 5, -23)
+addTP("Dịch Chuyển", "🥶 Đảo Tro Bụi", 74, 6, 1216)
+addTP("Dịch Chuyển", "🗿 Đảo Chủ Quyền", -1285, 6, 1240)
+addTP("Dịch Chuyển", "😈 Đảo Perch", -47, 9, -1337)
+addTP("Dịch Chuyển", "👑 Đảo Băng", -1348, 9, -1485)
+addTP("Dịch Chuyển", "🔥 Đảo Dừa", 1434, 9, -1433)
+addTP("Dịch Chuyển", "💀 Đảo Amber", 1243, 6, 1393)
+addTP("Dịch Chuyển", "🥶 Đảo Đấu Trường", 1543, 46, -51)
+addTP("Dịch Chuyển", "🗿 Đảo Núi Ai Lao", 2635, 6, -17)
+addTP("Dịch Chuyển", "😈 Đảo Thiên Đường", -2417, 7, -204)
 
--- 📍 THƯƠNG NHÂN
-CreateButton(Pages["Thương Nhân"], "📍 Tìm Thương Nhân", function()
+CreateButton(Pages["Thương Nhân"], "👑 Tìm Thương Nhân", function()
     local char = lp.Character or lp.CharacterAdded:Wait()
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
     if not hrp then return end
@@ -335,24 +324,22 @@ CreateButton(Pages["Thương Nhân"], "📍 Tìm Thương Nhân", function()
     end
 end)
 
-addTP("Thương Nhân", "Điểm 1", -33, 8, 1606)
-addTP("Thương Nhân", "Điểm 2", -1496, 9, 1134)
-addTP("Thương Nhân", "Điểm 3", -1528, 6, -1311)
-addTP("Thương Nhân", "Điểm 4", 1293, 8, 1428)
-addTP("Thương Nhân", "Điểm 5", 1592, 47, -44)
-addTP("Thương Nhân", "Điểm 6", -178, 6, -1268)
-addTP("Thương Nhân", "Điểm 7", 2861, 6, 121)
-addTP("Thương Nhân", "Điểm 8", 1501, 6, -1471)
+addTP("Thương Nhân", "🔥 Điểm 1", -33, 8, 1606)
+addTP("Thương Nhân", "💀 Điểm 2", -1496, 9, 1134)
+addTP("Thương Nhân", "🥶 Điểm 3", -1528, 6, -1311)
+addTP("Thương Nhân", "🗿 Điểm 4", 1293, 8, 1428)
+addTP("Thương Nhân", "😈 Điểm 5", 1592, 47, -44)
+addTP("Thương Nhân", "👑 Điểm 6", -178, 6, -1268)
+addTP("Thương Nhân", "🔥 Điểm 7", 2861, 6, 121)
+addTP("Thương Nhân", "💀 Điểm 8", 1501, 6, -1471)
 
--- 👻 LINH HỒN
-addTP("Linh Hồn", "Điểm 1", -1604, 21, -138)
-addTP("Linh Hồn", "Điểm 2", -1310, 14, -1576)
-addTP("Linh Hồn", "Điểm 3", 1536, 72, 1513)
+addTP("Linh Hồn", "🥶 Điểm 1", -1604, 21, -138)
+addTP("Linh Hồn", "🗿 Điểm 2", -1310, 14, -1576)
+addTP("Linh Hồn", "😈 Điểm 3", 1536, 72, 1513)
 
--- 🎁 CODE
 local multiCode = ""
 CreateInput(Pages["Code"], "Nhập nhiều code (mỗi dòng 1 code)", function(v) multiCode = v end)
-CreateButton(Pages["Code"], "🎁 Nhập Tất Cả Code", function()
+CreateButton(Pages["Code"], "👑 Nhập Tất Cả Code", function()
     if multiCode == "" then return end
     local codes = {}
     for code in multiCode:gmatch("[^\r\n]+") do
@@ -374,22 +361,21 @@ CreateButton(Pages["Code"], "🎁 Nhập Tất Cả Code", function()
 end)
 CreateParagraph(Pages["Code"], "Hướng Dẫn", "Nhập nhiều code vào ô trên (mỗi dòng 1 code), rồi bấm 'Nhập Tất Cả Code'.")
 
--- 🔗 JOIN SERVER
 local jobId = ""
 CreateInput(Pages["Join Server"], "Nhập Job ID...", function(v) jobId = v end)
-CreateButton(Pages["Join Server"], "🚀 Join Server", function()
+CreateButton(Pages["Join Server"], "🔥 Join Server", function()
     if jobId == "" then return end
     pcall(function()
         TeleportService:TeleportToPlaceInstance(game.PlaceId, jobId, lp)
     end)
 end)
-CreateButton(Pages["Join Server"], "📋 Copy Job ID Hiện Tại", function()
+CreateButton(Pages["Join Server"], "💀 Copy Job ID Hiện Tại", function()
     if game.JobId and game.JobId ~= "" then
         setclipboard(game.JobId)
         print("✅ Đã copy: " .. game.JobId)
     end
 end)
-CreateButton(Pages["Join Server"], "📥 Join Từ Clipboard", function()
+CreateButton(Pages["Join Server"], "🥶 Join Từ Clipboard", function()
     local clip = getclipboard()
     if clip and clip ~= "" then
         pcall(function()
@@ -399,15 +385,35 @@ CreateButton(Pages["Join Server"], "📥 Join Từ Clipboard", function()
 end)
 CreateParagraph(Pages["Join Server"], "Hướng Dẫn", "1. Nhập Job ID vào ô trên\n2. Bấm 'Join Server'\n3. Hoặc 'Copy Job ID' để lấy ID server hiện tại\n4. Hoặc 'Join Từ Clipboard' nếu đã copy ID")
 
--- 📢 UPDATE
-CreateParagraph(Pages["Update"], "🐧 BeoHub v4.4", "Phiên bản mới nhất - UI nhỏ gọn hơn!")
+CreateParagraph(Pages["Update"], "👑 BeoHub v4.5", "Phiên bản BÁ KHÍ - AURA +99999 🔥")
 CreateParagraph(Pages["Update"], "📅 Ngày cập nhật", "17/09/2026")
-CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. UI nhỏ gọn hơn (520x400)\n2. Fix lỗi lướt tab\n3. Thêm tab Join Server\n4. Tab rộng 70px")
-CreateParagraph(Pages["Update"], "🐛 Đã fix", "- UI không còn to quá\n- Lướt tab mượt\n- Join Server hoạt động")
-CreateParagraph(Pages["Update"], "📌 Lưu ý", "1. Không teleport liên tục\n2. Chạy server ít người khi farm\n3. Test acc phụ trước\n4. Tránh auto minigame")
+CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. Icon troll bá khí 👑🥶🗿💀🔥😈\n2. Title xoay vòng\n3. Icon nút mở xoay vòng\n4. AURA +99999")
+CreateParagraph(Pages["Update"], "📌 Lưu ý", "1. Không teleport liên tục\n2. Chạy server ít người khi farm\n3. Test acc phụ trước")
 CreateParagraph(Pages["Update"], "Tin nhắn", "Ai dùng script này sẽ rất béo! 🐧")
 
--- ====================== LOGIC ======================
+local TrollMessages = {"🗿 Mày vừa mở BeoHub.","🥶 AURA ĐANG TĂNG...","👑 ADMIN KHÔNG BIẾT GÌ ĐÂU.","💀 NÃO SERVER ĐANG LOAD...","🔥 BÁ KHÍ ĐÃ ĐƯỢC KÍCH HOẠT.","🐧 PENGUIN POWER.","😈 99999 AURA.","🗿 Không có gì đáng ngờ ở đây."}
+local msgIdx = 1
+
+local TrollLabel = Instance.new("TextLabel")
+TrollLabel.Size = UDim2.new(1, -30, 0, 20)
+TrollLabel.Position = UDim2.new(0, 15, 1, -24)
+TrollLabel.BackgroundTransparency = 1
+TrollLabel.Text = TrollMessages[1]
+TrollLabel.TextColor3 = Color3.fromRGB(150, 150, 170)
+TrollLabel.Font = Enum.Font.GothamBold
+TrollLabel.TextSize = 10
+TrollLabel.TextXAlignment = Enum.TextXAlignment.Center
+TrollLabel.Parent = Main
+
+task.spawn(function()
+    while TrollLabel and TrollLabel.Parent do
+        TrollLabel.Text = TrollMessages[msgIdx]
+        msgIdx = msgIdx + 1
+        if msgIdx > #TrollMessages then msgIdx = 1 end
+        task.wait(2.5)
+    end
+end)
+
 task.spawn(function()
     while task.wait(0.3) do
         if getgenv().SafeAutoSell then
@@ -444,30 +450,25 @@ task.spawn(function()
             if not char then return end
             local hum = char:FindFirstChildOfClass("Humanoid")
             if not hum or hum.Health <= 0 then return end
-
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_Z then
                 VIM:SendKeyEvent(true, Enum.KeyCode.Z, false, game)
                 task.wait(0.15)
                 VIM:SendKeyEvent(false, Enum.KeyCode.Z, false, game)
-                task.wait(0.1)
             end
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_X then
                 VIM:SendKeyEvent(true, Enum.KeyCode.X, false, game)
                 task.wait(0.15)
                 VIM:SendKeyEvent(false, Enum.KeyCode.X, false, game)
-                task.wait(0.1)
             end
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_C then
                 VIM:SendKeyEvent(true, Enum.KeyCode.C, false, game)
                 task.wait(0.15)
                 VIM:SendKeyEvent(false, Enum.KeyCode.C, false, game)
-                task.wait(0.1)
             end
             if getgenv().PP_AutoSkillAll or getgenv().PP_Skill_V then
                 VIM:SendKeyEvent(true, Enum.KeyCode.V, false, game)
                 task.wait(0.15)
                 VIM:SendKeyEvent(false, Enum.KeyCode.V, false, game)
-                task.wait(0.1)
             end
         end)
     end
@@ -487,4 +488,4 @@ RunService.Stepped:Connect(function()
     end)
 end)
 
-print("🐧 BeoHub v4.4 Custom UI (Nhỏ gọn) đã tải!")
+print("👑 BeoHub v4.5 BÁ KHÍ loaded!")
