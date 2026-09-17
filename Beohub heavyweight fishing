@@ -32,34 +32,34 @@ if not ScreenGui.Parent then ScreenGui.Parent = lp.PlayerGui end
 -- ====================== NÚT VUÔNG MỞ/ĐÓNG ======================
 local OpenBtn = Instance.new("TextButton")
 OpenBtn.Name = "OpenBtn"
-OpenBtn.Size = UDim2.new(0, 60, 0, 60)
+OpenBtn.Size = UDim2.new(0, 55, 0, 55)
 OpenBtn.Position = UDim2.new(0, 20, 0.4, 0)
 OpenBtn.BackgroundColor3 = Color3.fromRGB(0, 140, 255)
 OpenBtn.Text = "🐧"
-OpenBtn.TextSize = 26
+OpenBtn.TextSize = 24
 OpenBtn.Font = Enum.Font.GothamBold
 OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 OpenBtn.Parent = ScreenGui
 OpenBtn.Active = true
 OpenBtn.Draggable = true
-Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(0, 10)
 
 local OpenStroke = Instance.new("UIStroke", OpenBtn)
 OpenStroke.Color = Color3.fromRGB(0, 200, 255)
 OpenStroke.Thickness = 2
 
--- ====================== MAIN FRAME ======================
+-- ====================== MAIN FRAME (NHỎ LẠI) ======================
 local Main = Instance.new("Frame")
 Main.Name = "Main"
-Main.Size = UDim2.new(0, 600, 0, 450)
-Main.Position = UDim2.new(0.5, -300, 0.5, -225)
+Main.Size = UDim2.new(0, 520, 0, 400)  -- NHỎ HƠN
+Main.Position = UDim2.new(0.5, -260, 0.5, -200)
 Main.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
 Main.BorderSizePixel = 0
 Main.Visible = false
 Main.Active = true
 Main.Draggable = true
 Main.Parent = ScreenGui
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 16)
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 14)
 
 local Stroke = Instance.new("UIStroke", Main)
 Stroke.Color = Color3.fromRGB(40, 40, 55)
@@ -67,25 +67,25 @@ Stroke.Thickness = 1.5
 
 -- Title
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -60, 0, 45)
-Title.Position = UDim2.new(0, 20, 0, 8)
+Title.Size = UDim2.new(1, -50, 0, 40)
+Title.Position = UDim2.new(0, 18, 0, 6)
 Title.BackgroundTransparency = 1
 Title.Text = "🐧 BeoHub v4.4"
 Title.TextColor3 = Color3.fromRGB(0, 200, 255)
 Title.Font = Enum.Font.GothamBold
-Title.TextSize = 22
+Title.TextSize = 20
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Main
 
 -- Close
 local Close = Instance.new("TextButton")
-Close.Size = UDim2.new(0, 35, 0, 35)
-Close.Position = UDim2.new(1, -45, 0, 10)
+Close.Size = UDim2.new(0, 32, 0, 32)
+Close.Position = UDim2.new(1, -42, 0, 8)
 Close.BackgroundTransparency = 1
 Close.Text = "✕"
 Close.TextColor3 = Color3.fromRGB(255, 80, 80)
 Close.Font = Enum.Font.GothamBold
-Close.TextSize = 22
+Close.TextSize = 20
 Close.Parent = Main
 
 -- Mở / Đóng
@@ -98,8 +98,8 @@ end)
 
 -- ====================== TAB ======================
 local TabBar = Instance.new("Frame")
-TabBar.Size = UDim2.new(1, -30, 0, 48)
-TabBar.Position = UDim2.new(0, 15, 0, 58)
+TabBar.Size = UDim2.new(1, -30, 0, 42)
+TabBar.Position = UDim2.new(0, 15, 0, 52)
 TabBar.BackgroundTransparency = 1
 TabBar.ClipsDescendants = true
 TabBar.Parent = Main
@@ -116,14 +116,14 @@ TabScroll.Parent = TabBar
 
 local TabLayout = Instance.new("UIListLayout", TabScroll)
 TabLayout.FillDirection = Enum.FillDirection.Horizontal
-TabLayout.Padding = UDim.new(0, 6)
+TabLayout.Padding = UDim.new(0, 5)
 TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 local Tabs = {"Câu Cá", "Kỹ Năng", "Công Cụ", "Dịch Chuyển", "Thương Nhân", "Linh Hồn", "Code", "Join Server", "Update"}
 local TabButtons = {}
 local Pages = {}
 
-local tabWidth = 80
+local tabWidth = 70  -- NHỎ HƠN
 
 for i, name in ipairs(Tabs) do
     local btn = Instance.new("TextButton")
@@ -132,22 +132,22 @@ for i, name in ipairs(Tabs) do
     btn.Text = name
     btn.TextColor3 = Color3.fromRGB(180, 180, 200)
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 11
+    btn.TextSize = 10
     btn.LayoutOrder = i
     btn.Parent = TabScroll
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
     TabButtons[name] = btn
 
     local page = Instance.new("ScrollingFrame")
-    page.Size = UDim2.new(1, -30, 1, -120)
-    page.Position = UDim2.new(0, 15, 0, 115)
+    page.Size = UDim2.new(1, -30, 1, -110)
+    page.Position = UDim2.new(0, 15, 0, 105)
     page.BackgroundTransparency = 1
     page.ScrollBarThickness = 4
     page.AutomaticCanvasSize = Enum.AutomaticSize.Y
     page.CanvasSize = UDim2.new(0, 0, 0, 0)
     page.Visible = (i == 1)
     page.Parent = Main
-    Instance.new("UIListLayout", page).Padding = UDim.new(0, 8)
+    Instance.new("UIListLayout", page).Padding = UDim.new(0, 6)
     Pages[name] = page
 end
 
@@ -166,25 +166,25 @@ end
 -- ====================== HÀM TẠO UI ======================
 local function CreateToggle(parent, text, default, callback)
     local row = Instance.new("Frame")
-    row.Size = UDim2.new(1, 0, 0, 42)
+    row.Size = UDim2.new(1, 0, 0, 38)
     row.BackgroundColor3 = Color3.fromRGB(28, 28, 38)
     row.Parent = parent
-    Instance.new("UICorner", row).CornerRadius = UDim.new(0, 12)
+    Instance.new("UICorner", row).CornerRadius = UDim.new(0, 10)
 
     local label = Instance.new("TextLabel")
     label.Size = UDim2.new(0.75, 0, 1, 0)
-    label.Position = UDim2.new(0, 15, 0, 0)
+    label.Position = UDim2.new(0, 12, 0, 0)
     label.BackgroundTransparency = 1
     label.Text = text
     label.TextColor3 = Color3.fromRGB(230, 230, 240)
     label.Font = Enum.Font.GothamBold
-    label.TextSize = 14
+    label.TextSize = 13
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.Parent = row
 
     local toggle = Instance.new("TextButton")
-    toggle.Size = UDim2.new(0, 55, 0, 28)
-    toggle.Position = UDim2.new(1, -70, 0.5, -14)
+    toggle.Size = UDim2.new(0, 50, 0, 26)
+    toggle.Position = UDim2.new(1, -62, 0.5, -13)
     toggle.BackgroundColor3 = default and Color3.fromRGB(0, 170, 100) or Color3.fromRGB(50, 50, 65)
     toggle.Text = ""
     toggle.Parent = row
@@ -200,32 +200,32 @@ end
 
 local function CreateButton(parent, text, callback)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 42)
+    btn.Size = UDim2.new(1, 0, 0, 38)
     btn.BackgroundColor3 = Color3.fromRGB(0, 130, 220)
     btn.Text = text
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 14
+    btn.TextSize = 13
     btn.Parent = parent
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 12)
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
     btn.MouseButton1Click:Connect(callback)
 end
 
 local function CreateInput(parent, placeholder, callback)
     local box = Instance.new("TextBox")
-    box.Size = UDim2.new(1, 0, 0, 42)
+    box.Size = UDim2.new(1, 0, 0, 38)
     box.BackgroundColor3 = Color3.fromRGB(28, 28, 38)
     box.PlaceholderText = placeholder
     box.PlaceholderColor3 = Color3.fromRGB(120, 120, 140)
     box.Text = ""
     box.TextColor3 = Color3.fromRGB(230, 230, 240)
     box.Font = Enum.Font.Gotham
-    box.TextSize = 13
+    box.TextSize = 12
     box.ClearTextOnFocus = false
     box.TextXAlignment = Enum.TextXAlignment.Left
     box.Parent = parent
-    Instance.new("UICorner", box).CornerRadius = UDim.new(0, 12)
-    Instance.new("UIPadding", box).PaddingLeft = UDim.new(0, 15)
+    Instance.new("UICorner", box).CornerRadius = UDim.new(0, 10)
+    Instance.new("UIPadding", box).PaddingLeft = UDim.new(0, 12)
     box.FocusLost:Connect(function() callback(box.Text) end)
 end
 
@@ -235,11 +235,11 @@ local function CreateParagraph(parent, title, content)
     frame.AutomaticSize = Enum.AutomaticSize.Y
     frame.BackgroundColor3 = Color3.fromRGB(28, 28, 38)
     frame.Parent = parent
-    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
-    Instance.new("UIPadding", frame).PaddingTop = UDim.new(0, 12)
-    Instance.new("UIPadding", frame).PaddingBottom = UDim.new(0, 12)
-    Instance.new("UIPadding", frame).PaddingLeft = UDim.new(0, 15)
-    Instance.new("UIPadding", frame).PaddingRight = UDim.new(0, 15)
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
+    Instance.new("UIPadding", frame).PaddingTop = UDim.new(0, 10)
+    Instance.new("UIPadding", frame).PaddingBottom = UDim.new(0, 10)
+    Instance.new("UIPadding", frame).PaddingLeft = UDim.new(0, 12)
+    Instance.new("UIPadding", frame).PaddingRight = UDim.new(0, 12)
 
     local lbl = Instance.new("TextLabel")
     lbl.Size = UDim2.new(1, 0, 0, 0)
@@ -248,7 +248,7 @@ local function CreateParagraph(parent, title, content)
     lbl.Text = "📌 " .. title .. "\n" .. content
     lbl.TextColor3 = Color3.fromRGB(200, 200, 220)
     lbl.Font = Enum.Font.Gotham
-    lbl.TextSize = 13
+    lbl.TextSize = 12
     lbl.TextWrapped = true
     lbl.TextXAlignment = Enum.TextXAlignment.Left
     lbl.TextYAlignment = Enum.TextYAlignment.Top
@@ -372,7 +372,7 @@ CreateButton(Pages["Code"], "🎁 Nhập Tất Cả Code", function()
         end
     end)
 end)
-CreateParagraph(Pages["Code"], "Hướng Dẫn", "Nhập nhiều code vào ô trên (mỗi dòng 1 code), rồi bấm 'Nhập Tất Cả Code'. Đợi 0.5s giữa các code.")
+CreateParagraph(Pages["Code"], "Hướng Dẫn", "Nhập nhiều code vào ô trên (mỗi dòng 1 code), rồi bấm 'Nhập Tất Cả Code'.")
 
 -- 🔗 JOIN SERVER
 local jobId = ""
@@ -397,13 +397,13 @@ CreateButton(Pages["Join Server"], "📥 Join Từ Clipboard", function()
         end)
     end
 end)
-CreateParagraph(Pages["Join Server"], "Hướng Dẫn", "1. Nhập Job ID vào ô trên\n2. Bấm 'Join Server'\n3. Hoặc bấm 'Copy Job ID' để lấy ID server hiện tại\n4. Hoặc 'Join Từ Clipboard' nếu đã copy ID")
+CreateParagraph(Pages["Join Server"], "Hướng Dẫn", "1. Nhập Job ID vào ô trên\n2. Bấm 'Join Server'\n3. Hoặc 'Copy Job ID' để lấy ID server hiện tại\n4. Hoặc 'Join Từ Clipboard' nếu đã copy ID")
 
 -- 📢 UPDATE
-CreateParagraph(Pages["Update"], "🐧 BeoHub v4.4", "Phiên bản mới nhất - Thêm tab Join Server!")
+CreateParagraph(Pages["Update"], "🐧 BeoHub v4.4", "Phiên bản mới nhất - UI nhỏ gọn hơn!")
 CreateParagraph(Pages["Update"], "📅 Ngày cập nhật", "17/09/2026")
-CreateParagraph(Pages["Update"], "🆕 Có gì mới trong v4.4?", "1. Fix lỗi lướt tab\n2. Thêm tab Join Server\n3. UI mượt hơn, đẹp hơn\n4. Tab rộng 80px")
-CreateParagraph(Pages["Update"], "🐛 Đã fix", "- Lướt tab ngang mượt\n- Lướt page dọc mượt\n- Join Server hoạt động\n- Script execute ổn định")
+CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. UI nhỏ gọn hơn (520x400)\n2. Fix lỗi lướt tab\n3. Thêm tab Join Server\n4. Tab rộng 70px")
+CreateParagraph(Pages["Update"], "🐛 Đã fix", "- UI không còn to quá\n- Lướt tab mượt\n- Join Server hoạt động")
 CreateParagraph(Pages["Update"], "📌 Lưu ý", "1. Không teleport liên tục\n2. Chạy server ít người khi farm\n3. Test acc phụ trước\n4. Tránh auto minigame")
 CreateParagraph(Pages["Update"], "Tin nhắn", "Ai dùng script này sẽ rất béo! 🐧")
 
@@ -487,4 +487,4 @@ RunService.Stepped:Connect(function()
     end)
 end)
 
-print("🐧 BeoHub v4.4 Custom UI + Tab Join Server đã tải!")
+print("🐧 BeoHub v4.4 Custom UI (Nhỏ gọn) đã tải!")
