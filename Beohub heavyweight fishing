@@ -640,14 +640,14 @@ CreateParagraph(Pages["Update"], "Tin nhắn", "Ai dùng script này sẽ rất 
 local TrollMessages = {
     "🗿 Mày vừa mở BeoHub.",
     "🥶 AURA ĐANG TĂNG...",
-    "👑 Tom_Iceren KHÔNG BIẾT GÌ ĐÂU.",
+    "🤫 Tom_Iceren KHÔNG BIẾT GÌ ĐÂU.",
     "💀 NÃO SERVER ĐANG LOAD...",
     "🔥 BÁ KHÍ ĐÃ ĐƯỢC KÍCH HOẠT.",
     "🥀 Sức mạnh script power.",
     "😈 99999 AURA.",
     "🗿 Không có gì đáng ngờ ở đây.",
     "🤮 Người xài nnvn 🤮👎",
-    "😱🗣️🔥 Người xài BeoHub AURA 999999"
+    "😱 Người xài BeoHub AURA 999999"
 }
 local msgIdx = 1
 
