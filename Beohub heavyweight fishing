@@ -291,7 +291,7 @@ AuraParticles.ClipsDescendants = true
 AuraParticles.ZIndex = Main.ZIndex + 5
 AuraParticles.Parent = Main
 
-local AuraIcons = {"🔥","🥶","💀","👑","🗿","⚡","✨","😈","🐧","💠","🤯","🥀","🗣️","👀"}
+local AuraIcons = {"🔥","🥶","💀","👑","🗿","⚡","✨","😈","🐧","💠","🤯","🥀","🗣️","👀","🤑"}
 task.spawn(function()
     while AuraParticles and AuraParticles.Parent do
         local particle = Instance.new("TextLabel")
@@ -696,7 +696,7 @@ addTP("Dịch Chuyển", "💀 Đảo Tre", -1226, 5, -23)
 addTP("Dịch Chuyển", "🥶 Đảo Tro Bụi", 74, 6, 1216)
 addTP("Dịch Chuyển", "🗿 Đảo Chủ Quyền", -1285, 6, 1240)
 addTP("Dịch Chuyển", "😈 Đảo Perch", -47, 9, -1337)
-addTP("Dịch Chuyển", "👑 Đảo Băng", -1348, 9, -1485)
+addTP("Dịch Chuyển", "😱 Đảo Băng", -1348, 9, -1485)
 addTP("Dịch Chuyển", "🔥 Đảo Dừa", 1434, 9, -1433)
 addTP("Dịch Chuyển", "💀 Đảo Amber", 1243, 6, 1393)
 addTP("Dịch Chuyển", "🥶 Đảo Đấu Trường", 1543, 46, -51)
@@ -723,7 +723,7 @@ addTP("Thương Nhân", "💀 Điểm 2", -1496, 9, 1134)
 addTP("Thương Nhân", "🥶 Điểm 3", -1528, 6, -1311)
 addTP("Thương Nhân", "🗿 Điểm 4", 1293, 8, 1428)
 addTP("Thương Nhân", "😈 Điểm 5", 1592, 47, -44)
-addTP("Thương Nhân", "👑 Điểm 6", -178, 6, -1268)
+addTP("Thương Nhân", "🥵 Điểm 6", -178, 6, -1268)
 addTP("Thương Nhân", "🔥 Điểm 7", 2861, 6, 121)
 addTP("Thương Nhân", "💀 Điểm 8", 1501, 6, -1471)
 
@@ -799,7 +799,7 @@ CreateParagraph(Pages["Update"], "📌 Lưu ý", "1. Không teleport liên tục
 CreateParagraph(Pages["Update"], "Tin nhắn", "Ai dùng script này sẽ rất béo! 🐧")
 
 -- TROLL MESSAGES
-local TrollMessages = {"🗿 Mày vừa mở BeoHub.","🥶 AURA ĐANG TĂNG...","🤫 Tom_Iceren KHÔNG BIẾT GÌ ĐÂU.","💀 NÃO SERVER ĐANG LOAD...","🔥 BÁ KHÍ ĐÃ ĐƯỢC KÍCH HOẠT.","🥀 Sức mạnh script power.","😈 99999 AURA.","🗿 Không có gì đáng ngờ ở đây.","🤮 Người xài nnvn 🤮👎","😱 Người xài BeoHub AURA 999999"}
+local TrollMessages = {"🗿 Mày vừa mở BeoHub.","🥶 AURA ĐANG TĂNG...","🤫 TOM_ICEREN KHÔNG BIẾT GÌ ĐÂU.","💀 NÃO SERVER ĐANG LOAD...","🔥 BÁ KHÍ ĐÃ ĐƯỢC KÍCH HOẠT.","🥀 Sức mạnh script power.","😈 99999 AURA.","🗿 Không có gì đáng ngờ ở đây.","🤮 Người xài nnvn 🤮👎","😱 Người xài BeoHub AURA 999999"}
 local msgIdx = 1
 local TrollLabel = Instance.new("TextLabel")
 TrollLabel.Size = UDim2.new(1, -30, 0, 16)
