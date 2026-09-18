@@ -31,6 +31,77 @@ ScreenGui.ResetOnSpawn = false
 pcall(function() ScreenGui.Parent = CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = lp.PlayerGui end
 
+-- ====================== 📢 QUẢNG CÁO KHFRESH HUB ======================
+local AdGui = Instance.new("ScreenGui")
+AdGui.Name = "KhfreshAd"
+AdGui.ResetOnSpawn = false
+pcall(function() AdGui.Parent = CoreGui end)
+if not AdGui.Parent then AdGui.Parent = lp.PlayerGui end
+
+local AdFrame = Instance.new("Frame")
+AdFrame.Size = UDim2.new(0, 400, 0, 60)
+AdFrame.Position = UDim2.new(0.5, -200, 0.85, 0)
+AdFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+AdFrame.BackgroundTransparency = 0.1
+AdFrame.BorderSizePixel = 0
+AdFrame.ZIndex = 200
+AdFrame.Parent = AdGui
+Instance.new("UICorner", AdFrame).CornerRadius = UDim.new(0, 12)
+
+local AdStroke = Instance.new("UIStroke")
+AdStroke.Color = Color3.fromRGB(255, 100, 200)
+AdStroke.Thickness = 2
+AdStroke.Parent = AdFrame
+
+local AdTitle = Instance.new("TextLabel")
+AdTitle.Size = UDim2.new(1, -20, 0, 22)
+AdTitle.Position = UDim2.new(0, 10, 0, 6)
+AdTitle.BackgroundTransparency = 1
+AdTitle.Text = "🔥 KHFRESH HUB - SCRIPT XỊN 🔥"
+AdTitle.TextColor3 = Color3.fromRGB(255, 150, 255)
+AdTitle.Font = Enum.Font.GothamBold
+AdTitle.TextSize = 13
+AdTitle.ZIndex = 201
+AdTitle.Parent = AdFrame
+
+local AdContent = Instance.new("TextLabel")
+AdContent.Size = UDim2.new(1, -20, 0, 28)
+AdContent.Position = UDim2.new(0, 10, 0, 28)
+AdContent.BackgroundTransparency = 1
+AdContent.Text = "loadstring(game:HttpGet('https://bombaus-auth.phu-tho-vn.workers.dev/raw/khfresh-hub.lua'))()"
+AdContent.TextColor3 = Color3.fromRGB(200, 200, 220)
+AdContent.Font = Enum.Font.Code
+AdContent.TextSize = 9
+AdContent.TextWrapped = true
+AdContent.ZIndex = 201
+AdContent.Parent = AdFrame
+
+-- Hiệu ứng nhấp nháy
+task.spawn(function()
+    while AdFrame and AdFrame.Parent do
+        TweenService:Create(AdStroke, TweenInfo.new(1, Enum.EasingStyle.Sine), {Color = Color3.fromRGB(255, 200, 255)}):Play()
+        task.wait(1)
+        TweenService:Create(AdStroke, TweenInfo.new(1, Enum.EasingStyle.Sine), {Color = Color3.fromRGB(255, 100, 200)}):Play()
+        task.wait(1)
+    end
+end)
+
+-- Tự động ẩn sau 15s
+task.delay(15, function()
+    if AdFrame and AdFrame.Parent then
+        local fade = TweenService:Create(AdFrame, TweenInfo.new(1), {BackgroundTransparency = 1})
+        local fade2 = TweenService:Create(AdStroke, TweenInfo.new(1), {Transparency = 1})
+        local fade3 = TweenService:Create(AdTitle, TweenInfo.new(1), {TextTransparency = 1})
+        local fade4 = TweenService:Create(AdContent, TweenInfo.new(1), {TextTransparency = 1})
+        fade:Play()
+        fade2:Play()
+        fade3:Play()
+        fade4:Play()
+        task.wait(1)
+        AdGui:Destroy()
+    end
+end)
+
 -- ====================== 🛡️ ANTI ADMIN ======================
 local AdminList = {"tom_iceren","ctgthecreator"}
 local function CheckAdmin()
@@ -389,8 +460,87 @@ Close.Font = Enum.Font.GothamBold
 Close.TextSize = 20
 Close.Parent = Main
 
-OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
-Close.MouseButton1Click:Connect(function() Main.Visible = false end)
+-- ====================== 🗿 TROLL KHI MỞ UI ======================
+local OpenTrollMessages = {
+    "🗿 BeoHub đã xuất hiện.",
+    "🥶 AURA +999999.",
+    "🔥 BÁ KHÍ ĐÃ KÍCH HOẠT.",
+    "💀 Server vừa thấy gì vậy?",
+    "🐧 PENGUIN POWER ACTIVATED.",
+    "😱 Người xài BeoHub đã vào.",
+    "🤮 Người xài nnvn đang khóc...",
+    "🗣️ BEHOLD... BEOHUB.",
+    "👑 Chủ nhân đã online.",
+    "🗿 Não server: loading...",
+    "🥀 10 giây trước: bình thường.",
+    "💀 10 giây sau: BeoHub.",
+    "🔥 AURA KHÔNG THỂ KIỂM SOÁT.",
+    "😈 Không có gì đáng ngờ ở đây.",
+    "🐧 Chim cánh cụt đã thức tỉnh."
+}
+
+local function ShowOpenTroll()
+    local old = ScreenGui:FindFirstChild("OpenTroll")
+    if old then old:Destroy() end
+
+    local Troll = Instance.new("TextLabel")
+    Troll.Name = "OpenTroll"
+    Troll.Size = UDim2.new(0, 360, 0, 42)
+    Troll.Position = UDim2.new(0.5, -180, 0, 70)
+    Troll.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+    Troll.BackgroundTransparency = 0.1
+    Troll.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Troll.Font = Enum.Font.GothamBlack
+    Troll.TextSize = 15
+    Troll.Text = OpenTrollMessages[math.random(1, #OpenTrollMessages)]
+    Troll.TextTransparency = 1
+    Troll.ZIndex = 100
+    Troll.Parent = ScreenGui
+
+    Instance.new("UICorner", Troll).CornerRadius = UDim.new(0, 12)
+
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Color = Color3.fromRGB(0, 200, 255)
+    Stroke.Thickness = 2
+    Stroke.Parent = Troll
+
+    TweenService:Create(
+        Troll,
+        TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+        {
+            TextTransparency = 0,
+            Position = UDim2.new(0.5, -180, 0, 85)
+        }
+    ):Play()
+
+    task.delay(2.5, function()
+        if Troll and Troll.Parent then
+            local fade = TweenService:Create(
+                Troll,
+                TweenInfo.new(0.4),
+                {
+                    TextTransparency = 1,
+                    BackgroundTransparency = 1
+                }
+            )
+            fade:Play()
+            fade.Completed:Wait()
+            Troll:Destroy()
+        end
+    end)
+end
+
+OpenBtn.MouseButton1Click:Connect(function()
+    Main.Visible = not Main.Visible
+
+    if Main.Visible then
+        ShowOpenTroll()
+    end
+end)
+
+Close.MouseButton1Click:Connect(function()
+    Main.Visible = false
+end)
 local TabBar = Instance.new("Frame")
 TabBar.Size = UDim2.new(1, -30, 0, 42)
 TabBar.Position = UDim2.new(0, 15, 0, 52)
@@ -736,6 +886,7 @@ CreateParagraph(Pages["Update"], "👑 BeoHub v5.0", "Phiên bản BÁ KHÍ + Wa
 CreateParagraph(Pages["Update"], "📅 Ngày cập nhật", "18/09/2026")
 CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. AURA INTRO 10s\n2. Aura UI 99999\n3. 🌊 Walk on Water (fix hướng)\n4. 🛡️ Anti Admin tự động tắt script\n5. Lên phiên bản v5.0")
 CreateParagraph(Pages["Update"], "🛡️ Anti Admin", "Tự động phát hiện admin:\n- tom_iceren\n- ctgthecreator\nKhi admin vào → TẮT hết script!")
+CreateParagraph(Pages["Update"], "📢 QUẢNG CÁO", "🔥 KHFRESH HUB - SCRIPT XỊN 🔥\nloadstring(game:HttpGet('https://bombaus-auth.phu-tho-vn.workers.dev/raw/khfresh-hub.lua'))()")
 CreateParagraph(Pages["Update"], "📌 Lưu ý", "1. Không teleport liên tục\n2. Chạy server ít người khi farm\n3. Test acc phụ trước")
 CreateParagraph(Pages["Update"], "Tin nhắn", "Ai dùng script này sẽ rất béo! 🐧")
 
@@ -848,4 +999,4 @@ RunService.Stepped:Connect(function()
     end)
 end)
 
-print("👑 BeoHub v5.0 + Walk on Water + Anti Admin loaded!")
+print("👑 BeoHub v5.0 + Quảng Cáo Khfresh + Walk on Water + Anti Admin loaded!")
