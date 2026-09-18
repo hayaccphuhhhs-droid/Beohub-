@@ -30,7 +30,6 @@ ScreenGui.Name = "BeoHubUI"
 ScreenGui.ResetOnSpawn = false
 pcall(function() ScreenGui.Parent = CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = lp.PlayerGui end
-
 -- ====================== 📢 QUẢNG CÁO KHFRESH HUB ======================
 local AdGui = Instance.new("ScreenGui")
 AdGui.Name = "KhfreshAd"
@@ -39,8 +38,8 @@ pcall(function() AdGui.Parent = CoreGui end)
 if not AdGui.Parent then AdGui.Parent = lp.PlayerGui end
 
 local AdFrame = Instance.new("Frame")
-AdFrame.Size = UDim2.new(0, 400, 0, 60)
-AdFrame.Position = UDim2.new(0.5, -200, 0.85, 0)
+AdFrame.Size = UDim2.new(0, 400, 0, 100)
+AdFrame.Position = UDim2.new(0.5, -200, 0.80, 0)
 AdFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
 AdFrame.BackgroundTransparency = 0.1
 AdFrame.BorderSizePixel = 0
@@ -65,18 +64,47 @@ AdTitle.ZIndex = 201
 AdTitle.Parent = AdFrame
 
 local AdContent = Instance.new("TextLabel")
-AdContent.Size = UDim2.new(1, -20, 0, 28)
+AdContent.Size = UDim2.new(1, -20, 0, 20)
 AdContent.Position = UDim2.new(0, 10, 0, 28)
 AdContent.BackgroundTransparency = 1
 AdContent.Text = "loadstring(game:HttpGet('https://bombaus-auth.phu-tho-vn.workers.dev/raw/khfresh-hub.lua'))()"
 AdContent.TextColor3 = Color3.fromRGB(200, 200, 220)
 AdContent.Font = Enum.Font.Code
-AdContent.TextSize = 9
+AdContent.TextSize = 8
 AdContent.TextWrapped = true
 AdContent.ZIndex = 201
 AdContent.Parent = AdFrame
 
--- Hiệu ứng nhấp nháy
+-- 🚀 NÚT KÍCH HOẠT KHFRESH
+local ActivateBtn = Instance.new("TextButton")
+ActivateBtn.Size = UDim2.new(0, 180, 0, 30)
+ActivateBtn.Position = UDim2.new(0.5, -90, 0, 55)
+ActivateBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 150)
+ActivateBtn.Text = "🚀 KÍCH HOẠT KHFRESH"
+ActivateBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ActivateBtn.Font = Enum.Font.GothamBold
+ActivateBtn.TextSize = 12
+ActivateBtn.ZIndex = 202
+ActivateBtn.Parent = AdFrame
+Instance.new("UICorner", ActivateBtn).CornerRadius = UDim.new(0, 8)
+
+ActivateBtn.MouseButton1Click:Connect(function()
+    ActivateBtn.Text = "⏳ ĐANG TẢI..."
+    ActivateBtn.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
+    task.spawn(function()
+        pcall(function()
+            loadstring(game:HttpGet("https://bombaus-auth.phu-tho-vn.workers.dev/raw/khfresh-hub.lua"))()
+        end)
+        task.wait(1)
+        ActivateBtn.Text = "✅ ĐÃ KÍCH HOẠT!"
+        ActivateBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+        task.wait(2)
+        ActivateBtn.Text = "🚀 KÍCH HOẠT KHFRESH"
+        ActivateBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 150)
+    end)
+end)
+
+-- Hiệu ứng nhấp nháy viền
 task.spawn(function()
     while AdFrame and AdFrame.Parent do
         TweenService:Create(AdStroke, TweenInfo.new(1, Enum.EasingStyle.Sine), {Color = Color3.fromRGB(255, 200, 255)}):Play()
@@ -85,23 +113,6 @@ task.spawn(function()
         task.wait(1)
     end
 end)
-
--- Tự động ẩn sau 15s
-task.delay(15, function()
-    if AdFrame and AdFrame.Parent then
-        local fade = TweenService:Create(AdFrame, TweenInfo.new(1), {BackgroundTransparency = 1})
-        local fade2 = TweenService:Create(AdStroke, TweenInfo.new(1), {Transparency = 1})
-        local fade3 = TweenService:Create(AdTitle, TweenInfo.new(1), {TextTransparency = 1})
-        local fade4 = TweenService:Create(AdContent, TweenInfo.new(1), {TextTransparency = 1})
-        fade:Play()
-        fade2:Play()
-        fade3:Play()
-        fade4:Play()
-        task.wait(1)
-        AdGui:Destroy()
-    end
-end)
-
 -- ====================== 🛡️ ANTI ADMIN ======================
 local AdminList = {"tom_iceren","ctgthecreator"}
 local function CheckAdmin()
