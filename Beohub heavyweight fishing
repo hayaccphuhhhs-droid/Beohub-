@@ -32,7 +32,6 @@ if not ScreenGui.Parent then ScreenGui.Parent = lp.PlayerGui end
 local Intro = Instance.new("Frame")
 Intro.Name = "AuraIntro"
 Intro.Size = UDim2.new(1, 0, 1, 0)
-Intro.Position = UDim2.new(0, 0, 0, 0)
 Intro.BackgroundColor3 = Color3.fromRGB(3, 3, 10)
 Intro.BorderSizePixel = 0
 Intro.ZIndex = 999
@@ -55,29 +54,29 @@ Logo.TextTransparency = 1
 Logo.ZIndex = 1000
 Logo.Parent = Intro
 
-local Name = Instance.new("TextLabel")
-Name.Size = UDim2.new(1, 0, 0, 60)
-Name.Position = UDim2.new(0, 0, 0.37, 0)
-Name.BackgroundTransparency = 1
-Name.Text = "BeoHub v4.7"
-Name.TextSize = 38
-Name.Font = Enum.Font.GothamBlack
-Name.TextColor3 = Color3.fromRGB(0, 200, 255)
-Name.TextTransparency = 1
-Name.ZIndex = 1000
-Name.Parent = Intro
+local IntroName = Instance.new("TextLabel")
+IntroName.Size = UDim2.new(1, 0, 0, 60)
+IntroName.Position = UDim2.new(0, 0, 0.37, 0)
+IntroName.BackgroundTransparency = 1
+IntroName.Text = "BeoHub v4.7"
+IntroName.TextSize = 38
+IntroName.Font = Enum.Font.GothamBlack
+IntroName.TextColor3 = Color3.fromRGB(0, 200, 255)
+IntroName.TextTransparency = 1
+IntroName.ZIndex = 1000
+IntroName.Parent = Intro
 
-local Aura = Instance.new("TextLabel")
-Aura.Size = UDim2.new(1, 0, 0, 45)
-Aura.Position = UDim2.new(0, 0, 0.47, 0)
-Aura.BackgroundTransparency = 1
-Aura.Text = "🥶 AURA 99999 • BÁ KHÍ MODE 🔥"
-Aura.TextSize = 20
-Aura.Font = Enum.Font.GothamBold
-Aura.TextColor3 = Color3.fromRGB(255, 255, 255)
-Aura.TextTransparency = 1
-Aura.ZIndex = 1000
-Aura.Parent = Intro
+local IntroAura = Instance.new("TextLabel")
+IntroAura.Size = UDim2.new(1, 0, 0, 45)
+IntroAura.Position = UDim2.new(0, 0, 0.47, 0)
+IntroAura.BackgroundTransparency = 1
+IntroAura.Text = "🥶 AURA 99999 • BÁ KHÍ MODE 🔥"
+IntroAura.TextSize = 20
+IntroAura.Font = Enum.Font.GothamBold
+IntroAura.TextColor3 = Color3.fromRGB(255, 255, 255)
+IntroAura.TextTransparency = 1
+IntroAura.ZIndex = 1000
+IntroAura.Parent = Intro
 
 local LoadingBG = Instance.new("Frame")
 LoadingBG.Size = UDim2.new(0, 340, 0, 8)
@@ -110,9 +109,9 @@ Status.Parent = Intro
 task.spawn(function()
     TweenService:Create(Logo, TweenInfo.new(1.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
     task.wait(1.2)
-    TweenService:Create(Name, TweenInfo.new(1.2, Enum.EasingStyle.Quad), {TextTransparency = 0}):Play()
+    TweenService:Create(IntroName, TweenInfo.new(1.2, Enum.EasingStyle.Quad), {TextTransparency = 0}):Play()
     task.wait(1.2)
-    TweenService:Create(Aura, TweenInfo.new(1.2), {TextTransparency = 0}):Play()
+    TweenService:Create(IntroAura, TweenInfo.new(1.2), {TextTransparency = 0}):Play()
     task.wait(1.2)
     local Messages = {"🥶 AURA đang tăng...","🔥 Kích hoạt BÁ KHÍ...","👑 Đang triệu hồi quyền năng...","💀 Server bắt đầu run...","🗿 Não server đang load...","🐧 PENGUIN POWER...","😈 AURA +99999..."}
     for i, message in ipairs(Messages) do
@@ -123,7 +122,7 @@ task.spawn(function()
     Status.Text = "👑 BÁ KHÍ 99999 ĐÃ SẴN SÀNG"
     task.wait(0.7)
     local FadeTime = 0.7
-    for _, Object in ipairs({Logo, Name, Aura, Status}) do
+    for _, Object in ipairs({Logo, IntroName, IntroAura, Status}) do
         TweenService:Create(Object, TweenInfo.new(FadeTime), {TextTransparency = 1}):Play()
     end
     TweenService:Create(LoadingBG, TweenInfo.new(FadeTime), {BackgroundTransparency = 1}):Play()
@@ -149,7 +148,7 @@ OpenBtn.Draggable = true
 Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(0, 10)
 Instance.new("UIStroke", OpenBtn).Color = Color3.fromRGB(0, 200, 255)
 
-local TrollIcons = {"👑","🥶","🗿","💀","🔥","😈","🐧"}
+local TrollIcons = {"👑","🥶","🗿","💀","🔥","😈","🐧","🤯","🥀","🗣️","👀"}
 local iconIdx = 1
 task.spawn(function()
     while OpenBtn and OpenBtn.Parent do
@@ -206,6 +205,7 @@ AuraGlow.Position = UDim2.new(0, -6, 0, -6)
 AuraGlow.BackgroundTransparency = 1
 AuraGlow.ZIndex = Main.ZIndex - 1
 AuraGlow.Parent = Main
+Instance.new("UICorner", AuraGlow).CornerRadius = UDim.new(0, 18)
 
 local GlowStroke = Instance.new("UIStroke")
 GlowStroke.Parent = AuraGlow
@@ -219,8 +219,6 @@ GlowGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 0, 255)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 255))
 })
-
-Instance.new("UICorner", AuraGlow).CornerRadius = UDim.new(0, 18)
 
 task.spawn(function()
     while AuraGlow and AuraGlow.Parent do
@@ -634,11 +632,22 @@ CreateParagraph(Pages["Join Server"], "Hướng Dẫn", "1. Nhập Job ID vào �
 
 CreateParagraph(Pages["Update"], "👑 BeoHub v4.7", "Phiên bản BÁ KHÍ - AURA +99999 + INTRO 10s 🔥")
 CreateParagraph(Pages["Update"], "📅 Ngày cập nhật", "18/09/2026")
-CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. AURA INTRO 10s khi mở script\n2. Aura UI 99999 xoay vòng\n3. Icon particle bay lên\n4. Aura Text gradient chạy")
+CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. AURA INTRO 10s khi mở script\n2. Aura UI 99999 xoay vòng\n3. Icon particle bay lên\n4. Troll message đổi mỗi 10s")
 CreateParagraph(Pages["Update"], "📌 Lưu ý", "1. Không teleport liên tục\n2. Chạy server ít người khi farm\n3. Test acc phụ trước")
 CreateParagraph(Pages["Update"], "Tin nhắn", "Ai dùng script này sẽ rất béo! 🐧")
 
-local TrollMessages = {"🗿 Mày vừa mở BeoHub.","🥶 AURA ĐANG TĂNG...","👑 ADMIN KHÔNG BIẾT GÌ ĐÂU.","💀 NÃO SERVER ĐANG LOAD...","🔥 BÁ KHÍ ĐÃ ĐƯỢC KÍCH HOẠT.","🐧 PENGUIN POWER.","😈 99999 AURA.","🗿 Không có gì đáng ngờ ở đây."}
+local TrollMessages = {
+    "🗿 Mày vừa mở BeoHub.",
+    "🥶 AURA ĐANG TĂNG...",
+    "👑 ADMIN KHÔNG BIẾT GÌ ĐÂU.",
+    "💀 NÃO SERVER ĐANG LOAD...",
+    "🔥 BÁ KHÍ ĐÃ ĐƯỢC KÍCH HOẠT.",
+    "🥀sức mạnh script POWER.",
+    "😈 99999 AURA.",
+    "🗿 Không có gì đáng ngờ ở đây.",
+    "🤮 Người xài script nnvn 🤮👎",
+    "😱🗣️🔥 Người xài BeoHub AURA 999999"
+}
 local msgIdx = 1
 
 local TrollLabel = Instance.new("TextLabel")
@@ -658,7 +667,7 @@ task.spawn(function()
         TrollLabel.Text = TrollMessages[msgIdx]
         msgIdx = msgIdx + 1
         if msgIdx > #TrollMessages then msgIdx = 1 end
-        task.wait(2.5)
+        task.wait(10)
     end
 end)
 
