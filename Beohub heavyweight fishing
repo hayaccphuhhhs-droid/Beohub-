@@ -148,7 +148,7 @@ OpenBtn.Draggable = true
 Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(0, 10)
 Instance.new("UIStroke", OpenBtn).Color = Color3.fromRGB(0, 200, 255)
 
-local TrollIcons = {"👑","🥶","🗿","💀","🔥","😈","🐧","🤯","🥀","🗣️","👀"}
+local TrollIcons = {"👑","🥶","🗿","💀","🔥","😈","🐧"}
 local iconIdx = 1
 task.spawn(function()
     while OpenBtn and OpenBtn.Parent do
@@ -239,7 +239,8 @@ AuraParticles.ClipsDescendants = true
 AuraParticles.ZIndex = Main.ZIndex + 5
 AuraParticles.Parent = Main
 
-local AuraIcons = {"🔥","🥶","💀","👑","🗿","⚡","✨","😈","🐧","💠"}
+-- ✅ ĐÃ SỬA: Thêm 4 icon mới 🤯🥀🗣️👀
+local AuraIcons = {"🔥","🥶","💀","👑","🗿","⚡","✨","😈","🐧","💠","🤯","🥀","🗣️","👀"}
 
 task.spawn(function()
     while AuraParticles and AuraParticles.Parent do
@@ -632,7 +633,7 @@ CreateParagraph(Pages["Join Server"], "Hướng Dẫn", "1. Nhập Job ID vào �
 
 CreateParagraph(Pages["Update"], "👑 BeoHub v4.7", "Phiên bản BÁ KHÍ - AURA +99999 + INTRO 10s 🔥")
 CreateParagraph(Pages["Update"], "📅 Ngày cập nhật", "18/09/2026")
-CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. AURA INTRO 10s khi mở script\n2. Aura UI 99999 xoay vòng\n3. Icon particle bay lên\n4. Troll message đổi mỗi 10s")
+CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. AURA INTRO 10s khi mở script\n2. Aura UI 99999 xoay vòng\n3. Icon particle bay lên (14 icon)\n4. Troll message đổi mỗi 10s")
 CreateParagraph(Pages["Update"], "📌 Lưu ý", "1. Không teleport liên tục\n2. Chạy server ít người khi farm\n3. Test acc phụ trước")
 CreateParagraph(Pages["Update"], "Tin nhắn", "Ai dùng script này sẽ rất béo! 🐧")
 
