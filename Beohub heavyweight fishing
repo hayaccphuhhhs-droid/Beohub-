@@ -5,6 +5,7 @@ local VIM = game:GetService("VirtualInputManager")
 local CoreGui = game:GetService("CoreGui")
 local TeleportService = game:GetService("TeleportService")
 local TweenService = game:GetService("TweenService")
+local StarterGui = game:GetService("StarterGui")
 local lp = Players.LocalPlayer
 
 getgenv().SafeAutoSell = false
@@ -17,6 +18,9 @@ getgenv().PP_Skill_Z = false
 getgenv().PP_Skill_X = false
 getgenv().PP_Skill_C = false
 getgenv().PP_Skill_V = false
+getgenv().WalkOnWater = false
+getgenv().AntiAdminEnabled = true
+getgenv().AdminInServer = false
 
 if CoreGui:FindFirstChild("BeoHubUI") then CoreGui.BeoHubUI:Destroy() end
 if lp.PlayerGui:FindFirstChild("BeoHubUI") then lp.PlayerGui.BeoHubUI:Destroy() end
@@ -27,8 +31,62 @@ ScreenGui.ResetOnSpawn = false
 pcall(function() ScreenGui.Parent = CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = lp.PlayerGui end
 
--- ====================== 👑 BEOHUB AURA INTRO 10S ======================
+-- ====================== 🛡️ ANTI ADMIN ======================
+local AdminList = {"tom_iceren","ctgthecreator"}
+local function CheckAdmin()
+    for _, player in ipairs(Players:GetPlayers()) do
+        local name = player.Name:lower()
+        for _, adminName in ipairs(AdminList) do
+            if name == adminName:lower() then
+                return true, player.Name
+            end
+        end
+    end
+    return false, nil
+end
+local function DisableAllScripts()
+    getgenv().SafeAutoSell = false
+    getgenv().NWKZ_Anchor = false
+    getgenv().PP_Noclip = false
+    getgenv().PP_AutoSkillAll = false
+    getgenv().PP_Skill_Z = false
+    getgenv().PP_Skill_X = false
+    getgenv().PP_Skill_C = false
+    getgenv().PP_Skill_V = false
+    getgenv().WalkOnWater = false
+    if CoreGui:FindFirstChild("BeoHubUI") then CoreGui.BeoHubUI.Enabled = false end
+    if lp.PlayerGui:FindFirstChild("BeoHubUI") then lp.PlayerGui.BeoHubUI.Enabled = false end
+end
+local function EnableAllScripts()
+    if CoreGui:FindFirstChild("BeoHubUI") then CoreGui.BeoHubUI.Enabled = true end
+    if lp.PlayerGui:FindFirstChild("BeoHubUI") then lp.PlayerGui.BeoHubUI.Enabled = true end
+end
+local function NotifyAdmin(adminName)
+    StarterGui:SetCore("SendNotification",{Title="⚠️ ADMIN TRONG SERVER ⚠️",Text="Phát hiện: "..adminName.."\nĐã tắt toàn bộ script!",Duration=5})
+end
+local function NotifySafe()
+    StarterGui:SetCore("SendNotification",{Title="✅ AN TOÀN",Text="Admin đã rời server. Script bật lại!",Duration=5})
+end
+task.spawn(function()
+    while task.wait(1) do
+        if getgenv().AntiAdminEnabled then
+            local hasAdmin, adminName = CheckAdmin()
+            if hasAdmin and not getgenv().AdminInServer then
+                getgenv().AdminInServer = true
+                DisableAllScripts()
+                NotifyAdmin(adminName)
+                warn("⚠️ ADMIN ĐÃ VÀO: "..adminName)
+            elseif not hasAdmin and getgenv().AdminInServer then
+                getgenv().AdminInServer = false
+                EnableAllScripts()
+                NotifySafe()
+                print("✅ Admin đã rời. Script bật lại!")
+            end
+        end
+    end
+end)
 
+-- ====================== 👑 BEOHUB AURA INTRO 10S ======================
 local Intro = Instance.new("Frame")
 Intro.Name = "AuraIntro"
 Intro.Size = UDim2.new(1, 0, 1, 0)
@@ -58,7 +116,7 @@ local IntroName = Instance.new("TextLabel")
 IntroName.Size = UDim2.new(1, 0, 0, 60)
 IntroName.Position = UDim2.new(0, 0, 0.37, 0)
 IntroName.BackgroundTransparency = 1
-IntroName.Text = "BeoHub v4.7"
+IntroName.Text = "BeoHub v5.0"
 IntroName.TextSize = 38
 IntroName.Font = Enum.Font.GothamBlack
 IntroName.TextColor3 = Color3.fromRGB(0, 200, 255)
@@ -131,10 +189,9 @@ task.spawn(function()
     task.wait(FadeTime)
     Intro:Destroy()
 end)
-
 -- ====================== NÚT MỞ ======================
-
 local OpenBtn = Instance.new("TextButton")
+OpenBtn.Name = "OpenBtn"
 OpenBtn.Size = UDim2.new(0, 55, 0, 55)
 OpenBtn.Position = UDim2.new(0, 20, 0.4, 0)
 OpenBtn.BackgroundColor3 = Color3.fromRGB(0, 140, 255)
@@ -172,12 +229,10 @@ Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 14)
 Instance.new("UIStroke", Main).Color = Color3.fromRGB(40, 40, 55)
 
 -- ====================== 🔥 AURA UI 99999 🔥 ======================
-
 local AuraStroke = Instance.new("UIStroke")
 AuraStroke.Parent = Main
 AuraStroke.Thickness = 3
 AuraStroke.Transparency = 0.15
-
 local AuraGradient = Instance.new("UIGradient")
 AuraGradient.Parent = AuraStroke
 AuraGradient.Color = ColorSequence.new({
@@ -187,7 +242,6 @@ AuraGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 180, 0)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 180))
 })
-
 task.spawn(function()
     while Main and Main.Parent do
         for i = 0, 360, 3 do
@@ -211,7 +265,6 @@ local GlowStroke = Instance.new("UIStroke")
 GlowStroke.Parent = AuraGlow
 GlowStroke.Thickness = 5
 GlowStroke.Transparency = 0.35
-
 local GlowGradient = Instance.new("UIGradient")
 GlowGradient.Parent = GlowStroke
 GlowGradient.Color = ColorSequence.new({
@@ -219,7 +272,6 @@ GlowGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 0, 255)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 255))
 })
-
 task.spawn(function()
     while AuraGlow and AuraGlow.Parent do
         local tween1 = TweenService:Create(GlowStroke, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Thickness = 9, Transparency = 0.05})
@@ -239,9 +291,7 @@ AuraParticles.ClipsDescendants = true
 AuraParticles.ZIndex = Main.ZIndex + 5
 AuraParticles.Parent = Main
 
--- ✅ ĐÃ SỬA: Thêm 4 icon mới 🤯🥀🗣️👀
 local AuraIcons = {"🔥","🥶","💀","👑","🗿","⚡","✨","😈","🐧","💠","🤯","🥀","🗣️","👀"}
-
 task.spawn(function()
     while AuraParticles and AuraParticles.Parent do
         local particle = Instance.new("TextLabel")
@@ -286,7 +336,6 @@ AuraTextGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 0, 200)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 220, 0))
 })
-
 task.spawn(function()
     while AuraText and AuraText.Parent do
         AuraTextGradient.Offset = Vector2.new(-1, 0)
@@ -308,20 +357,18 @@ AuraStatus.TextXAlignment = Enum.TextXAlignment.Center
 AuraStatus.ZIndex = 30
 AuraStatus.Parent = Main
 
--- ====================== 🔥 HẾT AURA UI 99999 🔥 ======================
-
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -180, 0, 40)
 Title.Position = UDim2.new(0, 18, 0, 6)
 Title.BackgroundTransparency = 1
-Title.Text = "👑🐧 BeoHub v4.7"
+Title.Text = "👑🐧 BeoHub v5.0"
 Title.TextColor3 = Color3.fromRGB(0, 200, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 20
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Main
 
-local Titles = {"👑🐧 BeoHub v4.7","🥶🐧 AURA MAX","🗿🐧 NO MERCY","💀🐧 BÁ KHÍ","🔥👑 LEGEND MODE"}
+local Titles = {"👑🐧 BeoHub v5.0","🥶🐧 AURA MAX","🗿🐧 NO MERCY","💀🐧 BÁ KHÍ","🔥👑 LEGEND MODE"}
 local titleIdx = 1
 task.spawn(function()
     while Title and Title.Parent do
@@ -344,7 +391,6 @@ Close.Parent = Main
 
 OpenBtn.MouseButton1Click:Connect(function() Main.Visible = not Main.Visible end)
 Close.MouseButton1Click:Connect(function() Main.Visible = false end)
-
 local TabBar = Instance.new("Frame")
 TabBar.Size = UDim2.new(1, -30, 0, 42)
 TabBar.Position = UDim2.new(0, 15, 0, 52)
@@ -497,6 +543,7 @@ local function CreateParagraph(parent, title, content)
     lbl.TextYAlignment = Enum.TextYAlignment.Top
     lbl.Parent = frame
 end
+-- ====================== TAB CÂU CÁ ======================
 CreateToggle(Pages["Câu Cá"], "💰 Auto Bán Cá", false, function(v) getgenv().SafeAutoSell = v end)
 CreateToggle(Pages["Câu Cá"], "Giữ Thanh Bar", false, function(v) getgenv().NWKZ_Anchor = v end)
 CreateButton(Pages["Câu Cá"], "💰 Bán Tất Cả Cá", function()
@@ -512,6 +559,7 @@ CreateButton(Pages["Câu Cá"], "🎣 Bật Nút Câu Ảo PPINGYYY", function()
     end)
 end)
 
+-- ====================== TAB KỸ NĂNG ======================
 CreateToggle(Pages["Kỹ Năng"], "⚡ Tất Cả Kỹ Năng", false, function(v) getgenv().PP_AutoSkillAll = v end)
 CreateToggle(Pages["Kỹ Năng"], "🔥 Kỹ Năng Z", false, function(v) getgenv().PP_Skill_Z = v end)
 CreateToggle(Pages["Kỹ Năng"], "💀 Kỹ Năng X", false, function(v) getgenv().PP_Skill_X = v end)
@@ -519,6 +567,7 @@ CreateToggle(Pages["Kỹ Năng"], "🥶 Kỹ Năng C", false, function(v) getgen
 CreateToggle(Pages["Kỹ Năng"], "👑 Kỹ Năng V", false, function(v) getgenv().PP_Skill_V = v end)
 CreateParagraph(Pages["Kỹ Năng"], "Cách Dùng", "Bật toggle kỹ năng muốn dùng. Script tự dùng skill mỗi 1s.")
 
+-- ====================== TAB CÔNG CỤ ======================
 CreateToggle(Pages["Công Cụ"], "⚡ Xuyên Tường", false, function(v) getgenv().PP_Noclip = v end)
 CreateButton(Pages["Công Cụ"], "🔥 Fix Lag", function()
     pcall(function()
@@ -535,6 +584,55 @@ CreateButton(Pages["Công Cụ"], "📐 Đo Tọa Độ (Copy)", function()
     print("📍 " .. coords)
 end)
 
+-- 🌊 WALK ON WATER
+local WaterParts = {}
+local OriginalWaterData = {}
+local function FindWaterParts()
+    WaterParts = {}
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("BasePart") and obj.Name:lower() == "water" then
+            table.insert(WaterParts, obj)
+        end
+    end
+    return #WaterParts
+end
+local function EnableWalkOnWater()
+    local count = FindWaterParts()
+    if count == 0 then return false end
+    for _, waterPart in ipairs(WaterParts) do
+        OriginalWaterData[waterPart] = {CanCollide = waterPart.CanCollide}
+        waterPart.CanCollide = true
+    end
+    return true
+end
+local function DisableWalkOnWater()
+    for waterPart, data in pairs(OriginalWaterData) do
+        if waterPart and waterPart.Parent then
+            waterPart.CanCollide = data.CanCollide
+        end
+    end
+    OriginalWaterData = {}
+end
+CreateToggle(Pages["Công Cụ"], "🌊 Đi Trên Mặt Nước", false, function(v)
+    getgenv().WalkOnWater = v
+    if v then EnableWalkOnWater() else DisableWalkOnWater() end
+end)
+task.spawn(function()
+    while task.wait(0.5) do
+        if getgenv().WalkOnWater then
+            local char = lp.Character
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    hum.AutoRotate = true
+                    hum.PlatformStand = false
+                end
+            end
+        end
+    end
+end)
+
+-- ====================== TAB DỊCH CHUYỂN ======================
 local function addTP(tab, name, x, y, z)
     CreateButton(Pages[tab], "👑 " .. name, function()
         if lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
@@ -542,7 +640,6 @@ local function addTP(tab, name, x, y, z)
         end
     end)
 end
-
 addTP("Dịch Chuyển", "🔥 Đảo Khởi Đầu", -236, 6, 56)
 addTP("Dịch Chuyển", "💀 Đảo Tre", -1226, 5, -23)
 addTP("Dịch Chuyển", "🥶 Đảo Tro Bụi", 74, 6, 1216)
@@ -555,6 +652,7 @@ addTP("Dịch Chuyển", "🥶 Đảo Đấu Trường", 1543, 46, -51)
 addTP("Dịch Chuyển", "🗿 Đảo Núi Ai Lao", 2635, 6, -17)
 addTP("Dịch Chuyển", "😈 Đảo Thiên Đường", -2417, 7, -204)
 
+-- ====================== TAB THƯƠNG NHÂN ======================
 CreateButton(Pages["Thương Nhân"], "👑 Tìm Thương Nhân", function()
     local char = lp.Character or lp.CharacterAdded:Wait()
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -569,7 +667,6 @@ CreateButton(Pages["Thương Nhân"], "👑 Tìm Thương Nhân", function()
         end
     end
 end)
-
 addTP("Thương Nhân", "🔥 Điểm 1", -33, 8, 1606)
 addTP("Thương Nhân", "💀 Điểm 2", -1496, 9, 1134)
 addTP("Thương Nhân", "🥶 Điểm 3", -1528, 6, -1311)
@@ -579,10 +676,12 @@ addTP("Thương Nhân", "👑 Điểm 6", -178, 6, -1268)
 addTP("Thương Nhân", "🔥 Điểm 7", 2861, 6, 121)
 addTP("Thương Nhân", "💀 Điểm 8", 1501, 6, -1471)
 
+-- ====================== TAB LINH HỒN ======================
 addTP("Linh Hồn", "🥶 Điểm 1", -1604, 21, -138)
 addTP("Linh Hồn", "🗿 Điểm 2", -1310, 14, -1576)
 addTP("Linh Hồn", "😈 Điểm 3", 1536, 72, 1513)
 
+-- ====================== TAB CODE ======================
 local multiCode = ""
 CreateInput(Pages["Code"], "Nhập nhiều code (mỗi dòng 1 code)", function(v) multiCode = v end)
 CreateButton(Pages["Code"], "👑 Nhập Tất Cả Code", function()
@@ -607,6 +706,7 @@ CreateButton(Pages["Code"], "👑 Nhập Tất Cả Code", function()
 end)
 CreateParagraph(Pages["Code"], "Hướng Dẫn", "Nhập nhiều code vào ô trên (mỗi dòng 1 code), rồi bấm 'Nhập Tất Cả Code'.")
 
+-- ====================== TAB JOIN SERVER ======================
 local jobId = ""
 CreateInput(Pages["Join Server"], "Nhập Job ID...", function(v) jobId = v end)
 CreateButton(Pages["Join Server"], "🔥 Join Server", function()
@@ -631,12 +731,15 @@ CreateButton(Pages["Join Server"], "🥶 Join Từ Clipboard", function()
 end)
 CreateParagraph(Pages["Join Server"], "Hướng Dẫn", "1. Nhập Job ID vào ô trên\n2. Bấm 'Join Server'\n3. Hoặc 'Copy Job ID' để lấy ID server hiện tại\n4. Hoặc 'Join Từ Clipboard' nếu đã copy ID")
 
-CreateParagraph(Pages["Update"], "👑 BeoHub v4.7", "Phiên bản BÁ KHÍ - AURA +99999 + INTRO 10s 🔥")
+-- ====================== TAB UPDATE ======================
+CreateParagraph(Pages["Update"], "👑 BeoHub v5.0", "Phiên bản BÁ KHÍ + Walk on Water + Anti Admin 🔥")
 CreateParagraph(Pages["Update"], "📅 Ngày cập nhật", "18/09/2026")
-CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. AURA INTRO 10s khi mở script\n2. Aura UI 99999 xoay vòng\n3. Icon particle bay lên (14 icon)\n4. Troll message đổi mỗi 10s")
+CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. AURA INTRO 10s\n2. Aura UI 99999\n3. 🌊 Walk on Water (fix hướng)\n4. 🛡️ Anti Admin tự động tắt script\n5. Lên phiên bản v5.0")
+CreateParagraph(Pages["Update"], "🛡️ Anti Admin", "Tự động phát hiện admin:\n- tom_iceren\n- ctgthecreator\nKhi admin vào → TẮT hết script!")
 CreateParagraph(Pages["Update"], "📌 Lưu ý", "1. Không teleport liên tục\n2. Chạy server ít người khi farm\n3. Test acc phụ trước")
 CreateParagraph(Pages["Update"], "Tin nhắn", "Ai dùng script này sẽ rất béo! 🐧")
 
+-- ====================== TROLL MESSAGES ======================
 local TrollMessages = {
     "🗿 Mày vừa mở BeoHub.",
     "🥶 AURA ĐANG TĂNG...",
@@ -650,7 +753,6 @@ local TrollMessages = {
     "😱 Người xài BeoHub AURA 999999"
 }
 local msgIdx = 1
-
 local TrollLabel = Instance.new("TextLabel")
 TrollLabel.Size = UDim2.new(1, -30, 0, 16)
 TrollLabel.Position = UDim2.new(0, 15, 1, -20)
@@ -662,7 +764,6 @@ TrollLabel.TextSize = 10
 TrollLabel.TextXAlignment = Enum.TextXAlignment.Center
 TrollLabel.ZIndex = 31
 TrollLabel.Parent = Main
-
 task.spawn(function()
     while TrollLabel and TrollLabel.Parent do
         TrollLabel.Text = TrollMessages[msgIdx]
@@ -672,6 +773,7 @@ task.spawn(function()
     end
 end)
 
+-- ====================== VÒNG LẶP AUTO ======================
 task.spawn(function()
     while task.wait(0.3) do
         if getgenv().SafeAutoSell then
@@ -746,4 +848,4 @@ RunService.Stepped:Connect(function()
     end)
 end)
 
-print("👑 BeoHub v4.7 AURA INTRO 10s loaded!")
+print("👑 BeoHub v5.0 + Walk on Water + Anti Admin loaded!")
