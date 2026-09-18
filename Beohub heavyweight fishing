@@ -37,7 +37,9 @@ local function CheckAdmin()
     for _, player in ipairs(Players:GetPlayers()) do
         local name = player.Name:lower()
         for _, adminName in ipairs(AdminList) do
-            if name == adminName:lower() then return true, player.Name end
+            if name == adminName:lower() then
+                return true, player.Name
+            end
         end
     end
     return false, nil
@@ -59,6 +61,12 @@ local function EnableAllScripts()
     if CoreGui:FindFirstChild("BeoHubUI") then CoreGui.BeoHubUI.Enabled = true end
     if lp.PlayerGui:FindFirstChild("BeoHubUI") then lp.PlayerGui.BeoHubUI.Enabled = true end
 end
+local function NotifyAdmin(adminName)
+    StarterGui:SetCore("SendNotification",{Title="⚠️ ADMIN TRONG SERVER ⚠️",Text="Phát hiện: "..adminName.."\nĐã tắt toàn bộ script!",Duration=5})
+end
+local function NotifySafe()
+    StarterGui:SetCore("SendNotification",{Title="✅ AN TOÀN",Text="Admin đã rời server. Script bật lại!",Duration=5})
+end
 task.spawn(function()
     while task.wait(1) do
         if getgenv().AntiAdminEnabled then
@@ -66,17 +74,19 @@ task.spawn(function()
             if hasAdmin and not getgenv().AdminInServer then
                 getgenv().AdminInServer = true
                 DisableAllScripts()
-                StarterGui:SetCore("SendNotification",{Title="⚠️ ADMIN TRONG SERVER ⚠️",Text="Phát hiện: "..adminName.."\nĐã tắt toàn bộ script!",Duration=5})
+                NotifyAdmin(adminName)
+                warn("⚠️ ADMIN ĐÃ VÀO: "..adminName)
             elseif not hasAdmin and getgenv().AdminInServer then
                 getgenv().AdminInServer = false
                 EnableAllScripts()
-                StarterGui:SetCore("SendNotification",{Title="✅ AN TOÀN",Text="Admin đã rời server. Script bật lại!",Duration=5})
+                NotifySafe()
+                print("✅ Admin đã rời. Script bật lại!")
             end
         end
     end
 end)
 
--- ====================== 👑 AURA INTRO 10S ======================
+-- ====================== 👑 BEOHUB AURA INTRO 10S ======================
 local Intro = Instance.new("Frame")
 Intro.Name = "AuraIntro"
 Intro.Size = UDim2.new(1, 0, 1, 0)
@@ -218,7 +228,7 @@ Main.Parent = ScreenGui
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 14)
 Instance.new("UIStroke", Main).Color = Color3.fromRGB(40, 40, 55)
 
--- Aura UI
+-- ====================== 🔥 AURA UI 99999 🔥 ======================
 local AuraStroke = Instance.new("UIStroke")
 AuraStroke.Parent = Main
 AuraStroke.Thickness = 3
@@ -242,6 +252,111 @@ task.spawn(function()
     end
 end)
 
+local AuraGlow = Instance.new("Frame")
+AuraGlow.Name = "AuraGlow"
+AuraGlow.Size = UDim2.new(1, 12, 1, 12)
+AuraGlow.Position = UDim2.new(0, -6, 0, -6)
+AuraGlow.BackgroundTransparency = 1
+AuraGlow.ZIndex = Main.ZIndex - 1
+AuraGlow.Parent = Main
+Instance.new("UICorner", AuraGlow).CornerRadius = UDim.new(0, 18)
+
+local GlowStroke = Instance.new("UIStroke")
+GlowStroke.Parent = AuraGlow
+GlowStroke.Thickness = 5
+GlowStroke.Transparency = 0.35
+local GlowGradient = Instance.new("UIGradient")
+GlowGradient.Parent = GlowStroke
+GlowGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 170, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 0, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 255))
+})
+task.spawn(function()
+    while AuraGlow and AuraGlow.Parent do
+        local tween1 = TweenService:Create(GlowStroke, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Thickness = 9, Transparency = 0.05})
+        local tween2 = TweenService:Create(GlowStroke, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Thickness = 4, Transparency = 0.4})
+        tween1:Play()
+        tween1.Completed:Wait()
+        tween2:Play()
+        tween2.Completed:Wait()
+    end
+end)
+
+local AuraParticles = Instance.new("Frame")
+AuraParticles.Name = "AuraParticles"
+AuraParticles.Size = UDim2.new(1, 0, 1, 0)
+AuraParticles.BackgroundTransparency = 1
+AuraParticles.ClipsDescendants = true
+AuraParticles.ZIndex = Main.ZIndex + 5
+AuraParticles.Parent = Main
+
+local AuraIcons = {"🔥","🥶","💀","👑","🗿","⚡","✨","😈","🐧","💠","🤯","🥀","🗣️","👀"}
+task.spawn(function()
+    while AuraParticles and AuraParticles.Parent do
+        local particle = Instance.new("TextLabel")
+        local size = math.random(12, 22)
+        particle.Size = UDim2.new(0, size, 0, size)
+        particle.Position = UDim2.new(math.random(), 0, 1, 0)
+        particle.BackgroundTransparency = 1
+        particle.Text = AuraIcons[math.random(1, #AuraIcons)]
+        particle.TextSize = size
+        particle.TextTransparency = 0.15
+        particle.ZIndex = 20
+        particle.Parent = AuraParticles
+        local endX = math.clamp(particle.Position.X.Scale + math.random(-15, 15) / 100, 0, 1)
+        local tween = TweenService:Create(particle, TweenInfo.new(math.random(12, 22) / 10, Enum.EasingStyle.Linear), {
+            Position = UDim2.new(endX, 0, -0.15, 0),
+            TextTransparency = 1,
+            Rotation = math.random(-180, 180)
+        })
+        tween:Play()
+        task.delay(2.5, function() if particle then particle:Destroy() end end)
+        task.wait(0.25)
+    end
+end)
+
+local AuraText = Instance.new("TextLabel")
+AuraText.Name = "AuraText"
+AuraText.Size = UDim2.new(0, 150, 0, 22)
+AuraText.Position = UDim2.new(1, -165, 0, 8)
+AuraText.BackgroundTransparency = 1
+AuraText.Text = "🔥 AURA: 99999+"
+AuraText.TextColor3 = Color3.fromRGB(255, 255, 255)
+AuraText.Font = Enum.Font.GothamBold
+AuraText.TextSize = 12
+AuraText.TextXAlignment = Enum.TextXAlignment.Right
+AuraText.ZIndex = 30
+AuraText.Parent = Main
+
+local AuraTextGradient = Instance.new("UIGradient")
+AuraTextGradient.Parent = AuraText
+AuraTextGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 220, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 0, 200)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 220, 0))
+})
+task.spawn(function()
+    while AuraText and AuraText.Parent do
+        AuraTextGradient.Offset = Vector2.new(-1, 0)
+        local tween = TweenService:Create(AuraTextGradient, TweenInfo.new(1.2, Enum.EasingStyle.Linear), {Offset = Vector2.new(1, 0)})
+        tween:Play()
+        tween.Completed:Wait()
+    end
+end)
+
+local AuraStatus = Instance.new("TextLabel")
+AuraStatus.Size = UDim2.new(1, -30, 0, 18)
+AuraStatus.Position = UDim2.new(0, 15, 1, -45)
+AuraStatus.BackgroundTransparency = 1
+AuraStatus.Text = "🗿 STATUS: BÁ KHÍ ĐANG HOẠT ĐỘNG 🔥"
+AuraStatus.TextColor3 = Color3.fromRGB(170, 220, 255)
+AuraStatus.Font = Enum.Font.GothamBold
+AuraStatus.TextSize = 10
+AuraStatus.TextXAlignment = Enum.TextXAlignment.Center
+AuraStatus.ZIndex = 30
+AuraStatus.Parent = Main
+
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -180, 0, 40)
 Title.Position = UDim2.new(0, 18, 0, 6)
@@ -253,6 +368,17 @@ Title.TextSize = 20
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Main
 
+local Titles = {"👑🐧 BeoHub v5.0","🥶🐧 AURA MAX","🗿🐧 NO MERCY","💀🐧 BÁ KHÍ","🔥👑 LEGEND MODE"}
+local titleIdx = 1
+task.spawn(function()
+    while Title and Title.Parent do
+        Title.Text = Titles[titleIdx]
+        titleIdx = titleIdx + 1
+        if titleIdx > #Titles then titleIdx = 1 end
+        task.wait(2)
+    end
+end)
+
 local Close = Instance.new("TextButton")
 Close.Size = UDim2.new(0, 32, 0, 32)
 Close.Position = UDim2.new(1, -42, 0, 8)
@@ -263,8 +389,24 @@ Close.Font = Enum.Font.GothamBold
 Close.TextSize = 20
 Close.Parent = Main
 
--- TROLL KHI MỞ UI
-local OpenTrollMessages = {"🗿 BeoHub đã xuất hiện.","🥶 AURA +999999.","🔥 BÁ KHÍ ĐÃ KÍCH HOẠT.","💀 Server vừa thấy gì vậy?","🐧 PENGUIN POWER ACTIVATED.","😱 Người xài BeoHub đã vào.","🤮 Người xài nnvn đang khóc...","🗣️ BEHOLD... BEOHUB.","👑 Chủ nhân đã online.","🗿 Não server: loading...","🥀 10 giây trước: bình thường.","💀 10 giây sau: BeoHub.","🔥 AURA KHÔNG THỂ KIỂM SOÁT.","😈 Không có gì đáng ngờ ở đây.","🐧 Chim cánh cụt đã thức tỉnh."}
+-- ====================== 🗿 TROLL KHI MỞ UI ======================
+local OpenTrollMessages = {
+    "🗿 BeoHub đã xuất hiện.",
+    "🥶 AURA +999999.",
+    "🔥 BÁ KHÍ ĐÃ KÍCH HOẠT.",
+    "💀 Server vừa thấy gì vậy?",
+    "🐧 PENGUIN POWER ACTIVATED.",
+    "😱 Người xài BeoHub đã vào.",
+    "🤮 Người xài nnvn đang khóc...",
+    "🗣️ BEHOLD... BEOHUB.",
+    "👑 Chủ nhân đã online.",
+    "🗿 Não server: loading...",
+    "🥀 10 giây trước: bình thường.",
+    "💀 10 giây sau: BeoHub.",
+    "🔥 AURA KHÔNG THỂ KIỂM SOÁT.",
+    "😈 Không có gì đáng ngờ ở đây.",
+    "🐧 Chim cánh cụt đã thức tỉnh."
+}
 local function ShowOpenTroll()
     local old = ScreenGui:FindFirstChild("OpenTroll")
     if old then old:Destroy() end
@@ -303,7 +445,7 @@ OpenBtn.MouseButton1Click:Connect(function()
 end)
 Close.MouseButton1Click:Connect(function() Main.Visible = false end)
 
--- TẠO TAB
+-- ====================== TAB ======================
 local TabBar = Instance.new("Frame")
 TabBar.Size = UDim2.new(1, -30, 0, 42)
 TabBar.Position = UDim2.new(0, 15, 0, 52)
@@ -361,11 +503,11 @@ local function SwitchTab(name)
         TabButtons[n].TextColor3 = (n == name) and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(180, 180, 200)
     end
 end
+
 for name, btn in pairs(TabButtons) do
     btn.MouseButton1Click:Connect(function() SwitchTab(name) end)
 end
 
--- HÀM TẠO UI
 local function CreateToggle(parent, text, default, callback)
     local row = Instance.new("Frame")
     row.Size = UDim2.new(1, 0, 0, 38)
@@ -639,7 +781,7 @@ CreateButton(Pages["Join Server"], "🥶 Join Từ Clipboard", function()
     end
 end)
 CreateParagraph(Pages["Join Server"], "Hướng Dẫn", "1. Nhập Job ID vào ô trên\n2. Bấm 'Join Server'\n3. Hoặc 'Copy Job ID' để lấy ID server hiện tại\n4. Hoặc 'Join Từ Clipboard' nếu đã copy ID")
--- TAB UPDATE (Đã chuyển nút Khfresh vào đây)
+-- TAB UPDATE
 CreateParagraph(Pages["Update"], "👑 BeoHub v5.0", "Phiên bản BÁ KHÍ + Walk on Water + Anti Admin 🔥")
 CreateParagraph(Pages["Update"], "📅 Ngày cập nhật", "18/09/2026")
 CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. AURA INTRO 10s\n2. Aura UI 99999\n3. 🌊 Walk on Water (fix hướng)\n4. 🛡️ Anti Admin tự động tắt script\n5. Lên phiên bản v5.0")
