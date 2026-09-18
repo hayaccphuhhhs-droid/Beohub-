@@ -27,6 +27,114 @@ ScreenGui.ResetOnSpawn = false
 pcall(function() ScreenGui.Parent = CoreGui end)
 if not ScreenGui.Parent then ScreenGui.Parent = lp.PlayerGui end
 
+-- ====================== 👑 BEOHUB AURA INTRO 10S ======================
+
+local Intro = Instance.new("Frame")
+Intro.Name = "AuraIntro"
+Intro.Size = UDim2.new(1, 0, 1, 0)
+Intro.Position = UDim2.new(0, 0, 0, 0)
+Intro.BackgroundColor3 = Color3.fromRGB(3, 3, 10)
+Intro.BorderSizePixel = 0
+Intro.ZIndex = 999
+Intro.Parent = ScreenGui
+
+local IntroStroke = Instance.new("UIStroke")
+IntroStroke.Color = Color3.fromRGB(0, 180, 255)
+IntroStroke.Thickness = 3
+IntroStroke.Parent = Intro
+
+local Logo = Instance.new("TextLabel")
+Logo.Size = UDim2.new(1, 0, 0, 100)
+Logo.Position = UDim2.new(0, 0, 0.22, 0)
+Logo.BackgroundTransparency = 1
+Logo.Text = "👑🐧"
+Logo.TextSize = 65
+Logo.Font = Enum.Font.GothamBlack
+Logo.TextColor3 = Color3.fromRGB(255, 255, 255)
+Logo.TextTransparency = 1
+Logo.ZIndex = 1000
+Logo.Parent = Intro
+
+local Name = Instance.new("TextLabel")
+Name.Size = UDim2.new(1, 0, 0, 60)
+Name.Position = UDim2.new(0, 0, 0.37, 0)
+Name.BackgroundTransparency = 1
+Name.Text = "BeoHub v4.7"
+Name.TextSize = 38
+Name.Font = Enum.Font.GothamBlack
+Name.TextColor3 = Color3.fromRGB(0, 200, 255)
+Name.TextTransparency = 1
+Name.ZIndex = 1000
+Name.Parent = Intro
+
+local Aura = Instance.new("TextLabel")
+Aura.Size = UDim2.new(1, 0, 0, 45)
+Aura.Position = UDim2.new(0, 0, 0.47, 0)
+Aura.BackgroundTransparency = 1
+Aura.Text = "🥶 AURA 99999 • BÁ KHÍ MODE 🔥"
+Aura.TextSize = 20
+Aura.Font = Enum.Font.GothamBold
+Aura.TextColor3 = Color3.fromRGB(255, 255, 255)
+Aura.TextTransparency = 1
+Aura.ZIndex = 1000
+Aura.Parent = Intro
+
+local LoadingBG = Instance.new("Frame")
+LoadingBG.Size = UDim2.new(0, 340, 0, 8)
+LoadingBG.Position = UDim2.new(0.5, -170, 0.60, 0)
+LoadingBG.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
+LoadingBG.BorderSizePixel = 0
+LoadingBG.ZIndex = 1000
+LoadingBG.Parent = Intro
+Instance.new("UICorner", LoadingBG).CornerRadius = UDim.new(1, 0)
+
+local Loading = Instance.new("Frame")
+Loading.Size = UDim2.new(0, 0, 1, 0)
+Loading.BackgroundColor3 = Color3.fromRGB(0, 200, 255)
+Loading.BorderSizePixel = 0
+Loading.ZIndex = 1001
+Loading.Parent = LoadingBG
+Instance.new("UICorner", Loading).CornerRadius = UDim.new(1, 0)
+
+local Status = Instance.new("TextLabel")
+Status.Size = UDim2.new(1, 0, 0, 30)
+Status.Position = UDim2.new(0, 0, 0.64, 0)
+Status.BackgroundTransparency = 1
+Status.Text = "Đang khởi động..."
+Status.TextSize = 13
+Status.Font = Enum.Font.GothamBold
+Status.TextColor3 = Color3.fromRGB(160, 160, 180)
+Status.ZIndex = 1000
+Status.Parent = Intro
+
+task.spawn(function()
+    TweenService:Create(Logo, TweenInfo.new(1.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+    task.wait(1.2)
+    TweenService:Create(Name, TweenInfo.new(1.2, Enum.EasingStyle.Quad), {TextTransparency = 0}):Play()
+    task.wait(1.2)
+    TweenService:Create(Aura, TweenInfo.new(1.2), {TextTransparency = 0}):Play()
+    task.wait(1.2)
+    local Messages = {"🥶 AURA đang tăng...","🔥 Kích hoạt BÁ KHÍ...","👑 Đang triệu hồi quyền năng...","💀 Server bắt đầu run...","🗿 Não server đang load...","🐧 PENGUIN POWER...","😈 AURA +99999..."}
+    for i, message in ipairs(Messages) do
+        Status.Text = message
+        TweenService:Create(Loading, TweenInfo.new(5 / #Messages, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(i / #Messages, 0, 1, 0)}):Play()
+        task.wait(5 / #Messages)
+    end
+    Status.Text = "👑 BÁ KHÍ 99999 ĐÃ SẴN SÀNG"
+    task.wait(0.7)
+    local FadeTime = 0.7
+    for _, Object in ipairs({Logo, Name, Aura, Status}) do
+        TweenService:Create(Object, TweenInfo.new(FadeTime), {TextTransparency = 1}):Play()
+    end
+    TweenService:Create(LoadingBG, TweenInfo.new(FadeTime), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(Loading, TweenInfo.new(FadeTime), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(Intro, TweenInfo.new(FadeTime), {BackgroundTransparency = 1}):Play()
+    task.wait(FadeTime)
+    Intro:Destroy()
+end)
+
+-- ====================== NÚT MỞ ======================
+
 local OpenBtn = Instance.new("TextButton")
 OpenBtn.Size = UDim2.new(0, 55, 0, 55)
 OpenBtn.Position = UDim2.new(0, 20, 0.4, 0)
@@ -64,18 +172,157 @@ Main.Parent = ScreenGui
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 14)
 Instance.new("UIStroke", Main).Color = Color3.fromRGB(40, 40, 55)
 
+-- ====================== 🔥 AURA UI 99999 🔥 ======================
+
+local AuraStroke = Instance.new("UIStroke")
+AuraStroke.Parent = Main
+AuraStroke.Thickness = 3
+AuraStroke.Transparency = 0.15
+
+local AuraGradient = Instance.new("UIGradient")
+AuraGradient.Parent = AuraStroke
+AuraGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 200, 255)),
+    ColorSequenceKeypoint.new(0.25, Color3.fromRGB(100, 0, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 0, 120)),
+    ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 180, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 180))
+})
+
+task.spawn(function()
+    while Main and Main.Parent do
+        for i = 0, 360, 3 do
+            if not AuraGradient or not AuraGradient.Parent then break end
+            AuraGradient.Rotation = i
+            task.wait(0.025)
+        end
+    end
+end)
+
+local AuraGlow = Instance.new("Frame")
+AuraGlow.Name = "AuraGlow"
+AuraGlow.Size = UDim2.new(1, 12, 1, 12)
+AuraGlow.Position = UDim2.new(0, -6, 0, -6)
+AuraGlow.BackgroundTransparency = 1
+AuraGlow.ZIndex = Main.ZIndex - 1
+AuraGlow.Parent = Main
+
+local GlowStroke = Instance.new("UIStroke")
+GlowStroke.Parent = AuraGlow
+GlowStroke.Thickness = 5
+GlowStroke.Transparency = 0.35
+
+local GlowGradient = Instance.new("UIGradient")
+GlowGradient.Parent = GlowStroke
+GlowGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 170, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(180, 0, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 255))
+})
+
+Instance.new("UICorner", AuraGlow).CornerRadius = UDim.new(0, 18)
+
+task.spawn(function()
+    while AuraGlow and AuraGlow.Parent do
+        local tween1 = TweenService:Create(GlowStroke, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Thickness = 9, Transparency = 0.05})
+        local tween2 = TweenService:Create(GlowStroke, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Thickness = 4, Transparency = 0.4})
+        tween1:Play()
+        tween1.Completed:Wait()
+        tween2:Play()
+        tween2.Completed:Wait()
+    end
+end)
+
+local AuraParticles = Instance.new("Frame")
+AuraParticles.Name = "AuraParticles"
+AuraParticles.Size = UDim2.new(1, 0, 1, 0)
+AuraParticles.BackgroundTransparency = 1
+AuraParticles.ClipsDescendants = true
+AuraParticles.ZIndex = Main.ZIndex + 5
+AuraParticles.Parent = Main
+
+local AuraIcons = {"🔥","🥶","💀","👑","🗿","⚡","✨","😈","🐧","💠"}
+
+task.spawn(function()
+    while AuraParticles and AuraParticles.Parent do
+        local particle = Instance.new("TextLabel")
+        local size = math.random(12, 22)
+        particle.Size = UDim2.new(0, size, 0, size)
+        particle.Position = UDim2.new(math.random(), 0, 1, 0)
+        particle.BackgroundTransparency = 1
+        particle.Text = AuraIcons[math.random(1, #AuraIcons)]
+        particle.TextSize = size
+        particle.TextTransparency = 0.15
+        particle.ZIndex = 20
+        particle.Parent = AuraParticles
+        local endX = math.clamp(particle.Position.X.Scale + math.random(-15, 15) / 100, 0, 1)
+        local tween = TweenService:Create(particle, TweenInfo.new(math.random(12, 22) / 10, Enum.EasingStyle.Linear), {
+            Position = UDim2.new(endX, 0, -0.15, 0),
+            TextTransparency = 1,
+            Rotation = math.random(-180, 180)
+        })
+        tween:Play()
+        task.delay(2.5, function() if particle then particle:Destroy() end end)
+        task.wait(0.25)
+    end
+end)
+
+local AuraText = Instance.new("TextLabel")
+AuraText.Name = "AuraText"
+AuraText.Size = UDim2.new(0, 150, 0, 22)
+AuraText.Position = UDim2.new(1, -165, 0, 8)
+AuraText.BackgroundTransparency = 1
+AuraText.Text = "🔥 AURA: 99999+"
+AuraText.TextColor3 = Color3.fromRGB(255, 255, 255)
+AuraText.Font = Enum.Font.GothamBold
+AuraText.TextSize = 12
+AuraText.TextXAlignment = Enum.TextXAlignment.Right
+AuraText.ZIndex = 30
+AuraText.Parent = Main
+
+local AuraTextGradient = Instance.new("UIGradient")
+AuraTextGradient.Parent = AuraText
+AuraTextGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 220, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 0, 200)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 220, 0))
+})
+
+task.spawn(function()
+    while AuraText and AuraText.Parent do
+        AuraTextGradient.Offset = Vector2.new(-1, 0)
+        local tween = TweenService:Create(AuraTextGradient, TweenInfo.new(1.2, Enum.EasingStyle.Linear), {Offset = Vector2.new(1, 0)})
+        tween:Play()
+        tween.Completed:Wait()
+    end
+end)
+
+local AuraStatus = Instance.new("TextLabel")
+AuraStatus.Size = UDim2.new(1, -30, 0, 18)
+AuraStatus.Position = UDim2.new(0, 15, 1, -45)
+AuraStatus.BackgroundTransparency = 1
+AuraStatus.Text = "🗿 STATUS: BÁ KHÍ ĐANG HOẠT ĐỘNG 🔥"
+AuraStatus.TextColor3 = Color3.fromRGB(170, 220, 255)
+AuraStatus.Font = Enum.Font.GothamBold
+AuraStatus.TextSize = 10
+AuraStatus.TextXAlignment = Enum.TextXAlignment.Center
+AuraStatus.ZIndex = 30
+AuraStatus.Parent = Main
+
+-- ====================== 🔥 HẾT AURA UI 99999 🔥 ======================
+
 local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -50, 0, 40)
+Title.Size = UDim2.new(1, -180, 0, 40)
 Title.Position = UDim2.new(0, 18, 0, 6)
 Title.BackgroundTransparency = 1
-Title.Text = "👑🐧 BeoHub v4.5"
+Title.Text = "👑🐧 BeoHub v4.7"
 Title.TextColor3 = Color3.fromRGB(0, 200, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 20
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Main
 
-local Titles = {"👑🐧 BeoHub v4.5","🥶🐧 AURA MAX","🗿🐧 NO MERCY","💀🐧 BÁ KHÍ","🔥👑 LEGEND MODE"}
+local Titles = {"👑🐧 BeoHub v4.7","🥶🐧 AURA MAX","🗿🐧 NO MERCY","💀🐧 BÁ KHÍ","🔥👑 LEGEND MODE"}
 local titleIdx = 1
 task.spawn(function()
     while Title and Title.Parent do
@@ -137,7 +384,7 @@ for i, name in ipairs(Tabs) do
     TabButtons[name] = btn
 
     local page = Instance.new("ScrollingFrame")
-    page.Size = UDim2.new(1, -30, 1, -110)
+    page.Size = UDim2.new(1, -30, 1, -130)
     page.Position = UDim2.new(0, 15, 0, 105)
     page.BackgroundTransparency = 1
     page.ScrollBarThickness = 4
@@ -385,9 +632,9 @@ CreateButton(Pages["Join Server"], "🥶 Join Từ Clipboard", function()
 end)
 CreateParagraph(Pages["Join Server"], "Hướng Dẫn", "1. Nhập Job ID vào ô trên\n2. Bấm 'Join Server'\n3. Hoặc 'Copy Job ID' để lấy ID server hiện tại\n4. Hoặc 'Join Từ Clipboard' nếu đã copy ID")
 
-CreateParagraph(Pages["Update"], "👑 BeoHub v4.5", "Phiên bản BÁ KHÍ - AURA +99999 🔥")
-CreateParagraph(Pages["Update"], "📅 Ngày cập nhật", "17/09/2026")
-CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. Icon troll bá khí 👑🥶🗿💀🔥😈\n2. Title xoay vòng\n3. Icon nút mở xoay vòng\n4. AURA +99999")
+CreateParagraph(Pages["Update"], "👑 BeoHub v4.7", "Phiên bản BÁ KHÍ - AURA +99999 + INTRO 10s 🔥")
+CreateParagraph(Pages["Update"], "📅 Ngày cập nhật", "18/09/2026")
+CreateParagraph(Pages["Update"], "🆕 Có gì mới?", "1. AURA INTRO 10s khi mở script\n2. Aura UI 99999 xoay vòng\n3. Icon particle bay lên\n4. Aura Text gradient chạy")
 CreateParagraph(Pages["Update"], "📌 Lưu ý", "1. Không teleport liên tục\n2. Chạy server ít người khi farm\n3. Test acc phụ trước")
 CreateParagraph(Pages["Update"], "Tin nhắn", "Ai dùng script này sẽ rất béo! 🐧")
 
@@ -395,14 +642,15 @@ local TrollMessages = {"🗿 Mày vừa mở BeoHub.","🥶 AURA ĐANG TĂNG..."
 local msgIdx = 1
 
 local TrollLabel = Instance.new("TextLabel")
-TrollLabel.Size = UDim2.new(1, -30, 0, 20)
-TrollLabel.Position = UDim2.new(0, 15, 1, -24)
+TrollLabel.Size = UDim2.new(1, -30, 0, 16)
+TrollLabel.Position = UDim2.new(0, 15, 1, -20)
 TrollLabel.BackgroundTransparency = 1
 TrollLabel.Text = TrollMessages[1]
 TrollLabel.TextColor3 = Color3.fromRGB(150, 150, 170)
 TrollLabel.Font = Enum.Font.GothamBold
 TrollLabel.TextSize = 10
 TrollLabel.TextXAlignment = Enum.TextXAlignment.Center
+TrollLabel.ZIndex = 31
 TrollLabel.Parent = Main
 
 task.spawn(function()
@@ -488,4 +736,4 @@ RunService.Stepped:Connect(function()
     end)
 end)
 
-print("👑 BeoHub v4.5 BÁ KHÍ loaded!")
+print("👑 BeoHub v4.7 AURA INTRO 10s loaded!")
