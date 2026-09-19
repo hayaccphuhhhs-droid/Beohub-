@@ -9,382 +9,172 @@
     
     BeoHub Heavyweight Fishing - Ultimate Loader v5.0
     © 2026 BeoHub Team. All rights reserved.
-    Encrypted | Layered | Protected | Anti-Tamper
-    
-    WARNING: This file is protected. Reverse engineering is prohibited.
 ================================================================================
 ]]
 
-local _ENV = (getfenv and getfenv()) or _G
-local _G2 = _ENV
-local _VER = "5.0.0-FINAL"
-local _BUILD = "20260919"
-local _AUTHOR = "BeoHub Team"
 local _PREFIX = "[BeoHub-Loader]"
 local _DEBUG = false
-local _LOCKED = false
-local _START_TIME = os.clock and os.clock() or tick()
+local _VER = "5.0.0-FINAL"
+local _BUILD = "20260919"
 
-local _game = _ENV["game"] or game
-local _HttpGet = _game["HttpGet"]
-local _loadstring = _ENV["loadstring"] or _ENV["load"]
-local _warn = _ENV["warn"] or function() end
-local _pcall = _ENV["pcall"]
-local _xpcall = _ENV["xpcall"]
-local _type = _ENV["type"]
-local _tostring = _ENV["tostring"]
-local _tonumber = _ENV["tonumber"]
-local _table = _ENV["table"]
-local _string = _ENV["string"]
-local _math = _ENV["math"]
-local _bit = _ENV["bit"]
-local _os = _ENV["os"] or {}
-local _tick = _ENV["tick"] or function() return _START_TIME end
-local _task = _ENV["task"] or {}
-local _wait = _ENV["wait"] or function() end
-local _spawn = _ENV["spawn"] or function(f) return f end
-local _select = _ENV["select"]
-local _rawget = _ENV["rawget"]
-local _rawset = _ENV["rawset"]
-local _setmetatable = _ENV["setmetatable"]
-local _getmetatable = _ENV["getmetatable"]
-local _pairs = _ENV["pairs"]
-local _ipairs = _ENV["ipairs"]
-local _next = _ENV["next"]
-local _unpack = _ENV["unpack"] or _table.unpack
-
+-- Fake metadata (đánh lạc hướng)
 local _METADATA = {
     version = _VER,
     build = _BUILD,
-    author = _AUTHOR,
-    hwid = "BEO-" .. _BUILD .. "-XXXX-YYYY",
+    author = "BeoHub Team",
+    hwid = "BEO-XXXX-YYYY",
     license = "BEOHUB-PREMIUM-2026",
-    expires = "2027-12-31",
     signature = "SHA256:FAKE1234567890ABCDEF",
 }
 
 local _CONFIG = {
-    enabled = true,
-    verbose = false,
     timeout = 30,
     retry = 3,
-    ssl_verify = true,
-    proxy = nil,
     user_agent = "BeoHub/5.0 (Roblox)",
-    api_endpoint = "https://api.beohub.fake/v5/validate",
     api_key = "sk_live_FAKE_KEY_XXXXXXXXXXXX",
-    webhook = "https://discord.com/api/webhooks/FAKE/FAKE",
 }
 
+-- ======================= FAKE LOGGER =======================
 local _Logger = {}
 _Logger.__index = _Logger
-
 function _Logger.new(_name)
-    return setmetatable({
-        name = _name or "BeoHub",
-        logs = {},
-        level = "INFO",
-    }, _Logger)
+    return setmetatable({name = _name or "BeoHub", logs = {}}, _Logger)
 end
-
-function _Logger:log(_level, _msg)
+function _Logger:log(_lv, _msg)
     if _DEBUG then
-        local _entry = {
-            time = _tick(),
-            level = _level,
-            msg = _msg,
-        }
-        table.insert(self.logs, _entry)
-        _warn(_PREFIX, "[" .. _level .. "]", _msg)
+        table.insert(self.logs, {t = tick(), lv = _lv, m = _msg})
+        warn(_PREFIX, "[" .. _lv .. "]", _msg)
     end
 end
-
-function _Logger:info(_msg) self:log("INFO", _msg) end
-function _Logger:warn(_msg) self:log("WARN", _msg) end
-function _Logger:error(_msg) self:log("ERROR", _msg) end
-function _Logger:debug(_msg) self:log("DEBUG", _msg) end
-
+function _Logger:info(_m) self:log("INFO", _m) end
+function _Logger:error(_m) self:log("ERROR", _m) end
 local _logger = _Logger.new("BeoHub")
 
+-- ======================= FAKE SECURITY =======================
 local _Security = {}
-
-function _Security.validateHWID(_hwid)
-    if _DEBUG then _warn(_PREFIX, "Validating HWID:", _hwid) end
-    return true
-end
-
-function _Security.validateLicense(_license)
-    if _DEBUG then _warn(_PREFIX, "Validating license:", _license) end
-    return true
-end
-
-function _Security.validateSignature(_sig)
-    if _DEBUG then _warn(_PREFIX, "Validating signature:", _sig) end
-    return true
-end
-
-function _Security.getHWID()
-    return _METADATA.hwid
-end
-
-function _Security.getLicense()
-    return _METADATA.license
-end
-
-function _Security.isExpired()
-    return false
-end
-
-function _Security.checkIntegrity()
-    return true
-end
+function _Security.validateHWID(_h) return true end
+function _Security.validateLicense(_l) return true end
+function _Security.validateSignature(_s) return true end
+function _Security.checkIntegrity() return true end
+function _Security.getHWID() return _METADATA.hwid end
 
 _Security.validateHWID(_Security.getHWID())
-_Security.validateLicense(_Security.getLicense())
+_Security.validateLicense(_METADATA.license)
 _Security.validateSignature(_METADATA.signature)
 _Security.checkIntegrity()
-
 _logger:info("Security checks passed")
 
-local _B64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+-- ======================= BASE64 DECODER =======================
+local _B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 local function _b64decode(_data)
-    _data = _string.gsub(_data, "[^" .. _B64_CHARS .. "=]", "")
+    _data = string.gsub(_data, "[^" .. _B64 .. "=]", "")
     local _out = {}
     local _buf, _bits = 0, 0
     for _i = 1, #_data do
-        local _c = _string.sub(_data, _i, _i)
+        local _c = string.sub(_data, _i, _i)
         if _c ~= "=" then
-            local _v = _string.find(_B64_CHARS, _c, 1, true) - 1
+            local _v = string.find(_B64, _c, 1, true) - 1
             _buf = _buf * 64 + _v
             _bits = _bits + 6
             if _bits >= 8 then
                 _bits = _bits - 8
-                local _byte = _math.floor(_buf / (2 ^ _bits)) % 256
-                _table.insert(_out, _string.char(_byte))
+                local _byte = math.floor(_buf / (2 ^ _bits)) % 256
+                table.insert(_out, string.char(_byte))
             end
         end
     end
-    return _table.concat(_out)
+    return table.concat(_out)
 end
 
-local function _b64encode(_data)
-    local _out = {}
-    local _buf, _bits = 0, 0
-    for _i = 1, #_data do
-        _buf = _buf * 256 + _string.byte(_data, _i)
-        _bits = _bits + 8
-        while _bits >= 6 do
-            _bits = _bits - 6
-            local _v = _math.floor(_buf / (2 ^ _bits)) % 64
-            _table.insert(_out, _string.sub(_B64_CHARS, _v + 1, _v + 1))
-        end
-    end
-    if _bits > 0 then
-        _buf = _buf * (2 ^ (6 - _bits))
-        local _v = _buf % 64
-        _table.insert(_out, _string.sub(_B64_CHARS, _v + 1, _v + 1))
-    end
-    while #_out % 4 ~= 0 do
-        _table.insert(_out, "=")
-    end
-    return _table.concat(_out)
-end
-
-local function _xor(_s, _k)
-    if not _bit or not _bit.bxor then return _s end
-    local _out = {}
-    for _i = 1, #_s do
-        local _b = _bit.bxor(_string.byte(_s, _i), _string.byte(_k, (_i - 1) % #_k + 1))
-        _table.insert(_out, _string.char(_b))
-    end
-    return _table.concat(_out)
-end
-
-local function _reverse(_s)
-    return _string.reverse(_s)
-end
-
-local _S01 = "aHR0"
-local _S02 = "cHM6"
-local _S03 = "Ly9y"
-local _S04 = "YXcu"
-local _S05 = "Z2l0"
-local _S06 = "aHVi"
-local _S07 = "dXNl"
-local _S08 = "cmNv"
-local _S09 = "bnRl"
-local _S10 = "bnQu"
-local _S11 = "Y29t"
-local _S12 = "L2hh"
-local _S13 = "eWFj"
-local _S14 = "Y3Bo"
-local _S15 = "dWho"
-local _S16 = "aHMt"
-
-local _T01 = "ZHJv"
-local _T02 = "aWQv"
-local _T03 = "Q29k"
-local _T04 = "ZS1i"
-local _T05 = "ZW9o"
-local _T06 = "dWIv"
-local _T07 = "cmVm"
-local _T08 = "cy9o"
-local _T09 = "ZWFk"
-local _T10 = "cy9t"
-local _T11 = "YWlu"
-local _T12 = "L0Jl"
-local _T13 = "b2h1"
-local _T14 = "Yl9v"
-local _T15 = "YmZ1"
-local _T16 = "c2Nh"
-
-local _U01 = "dGVk"
-local _U02 = "Lmx1"
-local _U03 = "YQ=="
+-- ======================= URL CHIA 35 MẢNH =======================
+local _S = {
+    "aHR0","cHM6","Ly9y","YXcu","Z2l0","aHVi","dXNl","cmNv",
+    "bnRl","bnQu","Y29t","L2hh","eWFj","Y3Bo","dWho","aHMt",
+    "ZHJv","aWQv","Q29k","ZS1i","ZW9o","dWIv","cmVm","cy9o",
+    "ZWFk","cy9t","YWlu","L0Jl","b2h1","Yl9v","YmZ1","c2Nh",
+    "dGVk","Lmx1","YQ==",
+}
 
 local function _decodeAll()
-    local _parts = {
-        _S01, _S02, _S03, _S04, _S05, _S06, _S07, _S08,
-        _S09, _S10, _S11, _S12, _S13, _S14, _S15, _S16,
-        _T01, _T02, _T03, _T04, _T05, _T06, _T07, _T08,
-        _T09, _T10, _T11, _T12, _T13, _T14, _T15, _T16,
-        _U01, _U02, _U03,
-    }
-    local _result = ""
-    for _i = 1, #_parts do
-        _result = _result .. _b64decode(_parts[_i])
+    local _r = ""
+    for _i = 1, #_S do
+        _r = _r .. _b64decode(_S[_i])
     end
-    return _result
+    return _r
 end
 
 local _URL = _decodeAll()
 
+-- ======================= FAKE NETWORK =======================
 local _Network = {}
 _Network.__index = _Network
-
-function _Network.new(_opts)
-    return setmetatable({
-        opts = _opts or {},
-        retries = 0,
-        lastError = nil,
-        requestCount = 0,
-    }, _Network)
+function _Network.new(_o)
+    return setmetatable({opts = _o or {}, count = 0}, _Network)
 end
-
-function _Network:request(_method, _url, _body, _headers)
-    self.requestCount = self.requestCount + 1
-    if _DEBUG then
-        _warn(_PREFIX, "Request:", _method, _url)
-    end
-    return {
-        status = 200,
-        body = "FAKE_RESPONSE",
-        headers = {},
-    }
+function _Network:get(_u)
+    self.count = self.count + 1
+    return {status = 200, body = "FAKE"}
 end
+local _net = _Network.new(_CONFIG)
 
-function _Network:get(_url, _headers)
-    return self:request("GET", _url, nil, _headers)
-end
-
-function _Network:post(_url, _body, _headers)
-    return self:request("POST", _url, _body, _headers)
-end
-
-local _net = _Network.new({
-    timeout = _CONFIG.timeout,
-    retry = _CONFIG.retry,
-    user_agent = _CONFIG.user_agent,
-})
-
+-- ======================= ANTI-TAMPER =======================
 local _AntiTamper = {}
-
-function _AntiTamper.checkHttpGet()
-    return _type(_HttpGet) == "function"
+function _AntiTamper.checkHttpGet() return type(game.HttpGet) == "function" end
+function _AntiTamper.checkLoadstring() return type(loadstring) == "function" or type(load) == "function" end
+function _AntiTamper.checkGame() return type(game) == "userdata" end
+function _AntiTamper.checkURL(_u)
+    if type(_u) ~= "string" then return false end
+    if #_u < 20 then return false end
+    if not string.find(_u, "https://") then return false end
+    return true
 end
-
-function _AntiTamper.checkLoadstring()
-    return _type(_loadstring) == "function"
+function _AntiTamper.computeHash(_s)
+    local _h = 5381
+    for _i = 1, #_s do
+        _h = ((_h * 33) + string.byte(_s, _i)) % 2147483647
+    end
+    return _h
 end
-
-function _AntiTamper.checkGame()
-    return _game ~= nil and _type(_game) == "userdata"
-end
-
-function _AntiTamper.checkURL(_url)
-    if _type(_url) ~= "string" then return false end
-    if #_url < 20 then return false end
-    if not _string.find(_url, "https://") then return false end
+function _AntiTamper.verifyURL(_u)
+    local _h = _AntiTamper.computeHash(_u)
+    if _DEBUG then warn(_PREFIX, "URL hash:", _h) end
     return true
 end
 
-function _AntiTamper.computeHash(_str)
-    local _hash = 5381
-    for _i = 1, #_str do
-        _hash = ((_hash * 33) + _string.byte(_str, _i)) % 2147483647
-    end
-    return _hash
-end
-
-function _AntiTamper.verifyURL(_url)
-    local _h = _AntiTamper.computeHash(_url)
-    if _DEBUG then
-        _warn(_PREFIX, "URL hash:", _h)
-    end
-    return true
-end
-
-local _checks = {
-    { name = "HttpGet", fn = _AntiTamper.checkHttpGet },
-    { name = "loadstring", fn = _AntiTamper.checkLoadstring },
-    { name = "game", fn = _AntiTamper.checkGame },
-}
-
-local _allPassed = true
-for _i = 1, #_checks do
-    local _ok = _checks[_i].fn()
-    if not _ok then
-        _allPassed = false
-        _logger:error("Check failed: " .. _checks[_i].name)
-    end
-end
-
-if not _allPassed then
-    _warn(_PREFIX, "Môi trường không hợp lệ!")
+-- Chạy check
+if not _AntiTamper.checkHttpGet() then
+    warn(_PREFIX, "Executor không hỗ trợ HttpGet!")
     return
 end
-
+if not _AntiTamper.checkLoadstring() then
+    warn(_PREFIX, "Executor không hỗ trợ loadstring!")
+    return
+end
 if not _AntiTamper.checkURL(_URL) then
-    _warn(_PREFIX, "URL không hợp lệ!")
+    warn(_PREFIX, "URL không hợp lệ!")
     return
 end
-
 if not _AntiTamper.verifyURL(_URL) then
-    _warn(_PREFIX, "URL bị sửa đổi!")
+    warn(_PREFIX, "URL bị sửa!")
     return
 end
 
-local function _fetchWithRetry(_url, _maxRetry)
-    _maxRetry = _maxRetry or 3
-    local _lastErr = nil
-    for _attempt = 1, _maxRetry do
-        local _ok, _res = _pcall(function()
-            return _HttpGet(_game, _url)
+-- ======================= FETCH VỚI RETRY =======================
+local function _fetchWithRetry(_url, _max)
+    _max = _max or 3
+    local _lastErr
+    for _att = 1, _max do
+        local _ok, _res = pcall(function()
+            return game:HttpGet(_url)
         end)
         if _ok and _res and #_res > 10 then
             return _res, nil
         else
-            _lastErr = _ok and "Empty response" or _tostring(_res)
-            if _DEBUG then
-                _warn(_PREFIX, "Attempt " .. _attempt .. " failed: " .. _tostring(_lastErr))
-            end
-            if _attempt < _maxRetry then
-                if _task and _task.wait then
-                    _task.wait(1)
-                else
-                    _wait(1)
-                end
+            _lastErr = _ok and "Empty" or tostring(_res)
+            if _DEBUG then warn(_PREFIX, "Attempt " .. _att .. " failed: " .. _lastErr) end
+            if _att < _max then
+                if task and task.wait then task.wait(1) else wait(1) end
             end
         end
     end
@@ -393,91 +183,67 @@ end
 
 local _code, _err = _fetchWithRetry(_URL, 3)
 if not _code then
-    _warn(_PREFIX, "Không tải được code sau 3 lần thử: " .. _tostring(_err))
+    warn(_PREFIX, "Không tải được code: " .. tostring(_err))
     return
 end
 
 _logger:info("Downloaded: " .. #_code .. " bytes")
 
+-- ======================= VALIDATOR =======================
 local _Validator = {}
-
-function _Validator.checkSyntax(_src)
-    return #_src > 0
-end
-
-function _Validator.checkSize(_src)
-    return #_src > 10 and #_src < 10000000
-end
-
-function _Validator.checkEncoding(_src)
-    return true
-end
-
-function _Validator.checkMalicious(_src)
-    return true
-end
-
-function _Validator.validate(_src)
+function _Validator.checkSyntax(_s) return #_s > 0 end
+function _Validator.checkSize(_s) return #_s > 10 and #_s < 10000000 end
+function _Validator.checkEncoding(_s) return true end
+function _Validator.checkMalicious(_s) return true end
+function _Validator.validate(_s)
     local _checks = {
-        { name = "syntax", fn = function() return _Validator.checkSyntax(_src) end },
-        { name = "size", fn = function() return _Validator.checkSize(_src) end },
-        { name = "encoding", fn = function() return _Validator.checkEncoding(_src) end },
-        { name = "malicious", fn = function() return _Validator.checkMalicious(_src) end },
+        {n = "syntax", f = function() return _Validator.checkSyntax(_s) end},
+        {n = "size", f = function() return _Validator.checkSize(_s) end},
+        {n = "encoding", f = function() return _Validator.checkEncoding(_s) end},
+        {n = "malicious", f = function() return _Validator.checkMalicious(_s) end},
     }
     for _i = 1, #_checks do
-        if not _checks[_i].fn() then
-            return false, _checks[_i].name
+        if not _checks[_i].f() then
+            return false, _checks[_i].n
         end
     end
     return true, nil
 end
 
-local _valid, _failReason = _Validator.validate(_code)
+local _valid, _reason = _Validator.validate(_code)
 if not _valid then
-    _warn(_PREFIX, "Code không hợp lệ: " .. _tostring(_failReason))
+    warn(_PREFIX, "Code không hợp lệ: " .. tostring(_reason))
     return
 end
 
-_logger:info("Code validation passed")
-
+-- ======================= LOAD & RUN =======================
 local function _safeRun(_src, _name)
-    local _fn, _compileErr = _loadstring(_src, _name or "=BeoHub")
+    local _fn, _cErr = (loadstring or load)(_src, _name or "=BeoHub")
     if not _fn then
-        return false, "Compile: " .. _tostring(_compileErr)
+        return false, "Compile: " .. tostring(_cErr)
     end
-    
-    local _ok, _runErr = _pcall(_fn)
+    local _ok, _rErr = pcall(_fn)
     if not _ok then
-        return false, "Runtime: " .. _tostring(_runErr)
+        return false, "Runtime: " .. tostring(_rErr)
     end
-    
     return true, nil
 end
 
 local _runOK, _runErr = _safeRun(_code, "=BeoHubLoader")
 if not _runOK then
-    _warn(_PREFIX, "Chạy thất bại: " .. _tostring(_runErr))
-    _pcall(function()
-        local _fn = _loadstring(_code)
-        if _fn then _fn() end
-    end)
+    warn(_PREFIX, "Chạy thất bại: " .. tostring(_runErr))
     return
 end
 
 _logger:info("Executed successfully")
 
+-- ======================= CLEANUP =======================
 _code = nil
 _URL = nil
-_S01, _S02, _S03, _S04, _S05, _S06, _S07, _S08 = nil, nil, nil, nil, nil, nil, nil, nil
-_S09, _S10, _S11, _S12, _S13, _S14, _S15, _S16 = nil, nil, nil, nil, nil, nil, nil, nil
-_T01, _T02, _T03, _T04, _T05, _T06, _T07, _T08 = nil, nil, nil, nil, nil, nil, nil, nil
-_T09, _T10, _T11, _T12, _T13, _T14, _T15, _T16 = nil, nil, nil, nil, nil, nil, nil, nil
-_U01, _U02, _U03 = nil, nil, nil
+_S = nil
 _CONFIG = nil
 _METADATA = nil
 
 if _DEBUG then
-    local _elapsed = (_tick() - _START_TIME)
-    _warn(_PREFIX, "Total time: " .. _string.format("%.3f", _elapsed) .. "s")
-    _warn(_PREFIX, "✅ BeoHub Loader v" .. _VER .. " hoàn thành!")
+    warn(_PREFIX, "✅ BeoHub Loader v" .. _VER .. " hoàn thành!")
 end
