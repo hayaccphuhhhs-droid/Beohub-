@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/hayaccphuhhhs-droid/Code-beohub/refs/heads/main/Beohub_obfuscated.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hayaccphuhhhs-droid/Code-beohub/refs/heads/main/Code%20beohub"))()
